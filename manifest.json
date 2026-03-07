@@ -1,6 +1,6 @@
 {
   "name": "VIZO : Frame Guide",
-  "short_name": "VIZO",
+  "short_name": "VIZO : Frame Guide",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#2c2c2c",
