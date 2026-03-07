@@ -18,11 +18,11 @@ Desktop UX: Native icons (title bar & taskbar) and fixed-window layout for profe
 
 🛠 Usage / 사용법
 1. Web App (PWA)
-Visit the project website: https://idpw1408-code.github.io/AR_Master/
+Visit the project website: https://<여기에_새로운_주소를_입력하세요>/
 
 Install: Click the "Install" icon in the address bar (Chrome/Edge) or select "Add to Home Screen" on mobile.
 
-프로젝트 웹사이트에 접속하세요: https://idpw1408-code.github.io/AR_Master/
+프로젝트 웹사이트에 접속하세요: https://<여기에_새로운_주소를_입력하세요>/
 
 설치: 브라우저 주소창의 '설치' 아이콘을 클릭하거나 모바일의 경우 '홈 화면에 추가'를 눌러 설치하세요.
 
