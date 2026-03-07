@@ -16,16 +16,8 @@ body {
     margin: 0 auto;
 }
 
-.main-title {
-    color: #00d1ff;
-    margin-bottom: 20px;
-}
-
-.title {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+.main-title { color: #00d1ff; margin-bottom: 20px; }
+.title { display: block; font-weight: bold; margin-bottom: 10px; }
 
 select {
     background-color: white;
@@ -37,19 +29,18 @@ select {
     border-radius: 8px;
 }
 
-/* 입력창들을 한 줄로 나란히 배치 */
 .input-row {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
 .input-field {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    align-items: center;
 }
 
 .input-field label {
@@ -58,10 +49,16 @@ select {
     color: #e0e0e0;
 }
 
+/* 입력창과 px를 가로로 배치하는 핵심 */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 input {
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
+    width: 70px;
+    padding: 10px;
     background-color: #3d3d3d;
     color: white;
     border: none;
@@ -69,25 +66,20 @@ input {
     text-align: center;
 }
 
+.unit { color: #aaaaaa; font-size: 0.9rem; }
+
 button {
     background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
     padding-bottom: 5px;
+    color: white;
 }
 
-.unit {
-    color: #aaaaaa;
-    margin-bottom: 20px;
-}
+.footer { color: #00d1ff; font-size: 14px; }
 
-.footer {
-    color: #00d1ff;
-    font-size: 14px;
-}
-
-/* 숫자 입력 화살표 제거 */
+/* 숫자 증감 화살표 제거 */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
