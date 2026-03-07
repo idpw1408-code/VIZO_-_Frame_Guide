@@ -10,9 +10,16 @@ body {
 }
 
 .container {
-    text-align: center;
+    width: 90%;          /* 화면 너비의 90% 사용 */
+    max-width: 500px;    /* 너무 커지는 것 방지 */
+    margin: 0 auto;      /* 중앙 정렬 */
+    padding: 20px;
 }
 
+input, select {
+    width: 100%;         /* 부모 요소(container)에 꽉 차게 */
+    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+}
 .title {
     display: block;
     font-weight: bold;
@@ -81,4 +88,14 @@ input::-webkit-inner-spin-button {
     align-items: center;
     justify-content: center;
     gap: 8px; /* 간격을 살짝 좁혀서 한 줄에 잘 들어오게 조정 */
+}
+
+@media (max-width: 600px) {
+    /* 모바일에서는 폰트 크기를 약간 줄여서 짤림 방지 */
+    body {
+        font-size: 14px;
+    }
+    .container {
+        padding: 10px;
+    }
 }
