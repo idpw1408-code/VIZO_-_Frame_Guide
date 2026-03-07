@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspect Ratio Master v1.0</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <label class="title">종횡비 선택</label>
+        
+        <select id="ratioSelect" onchange="onComboSelect()">
+			<option value="Custom">Custom</option>
+			<option value="1.7777777777777777" selected>16:9</option>
+			<option value="2.1666666666666665">19.5:9 (스마트폰)</option>
+			<option value="1">1:1</option>
+			<option value="1.3333333333333333">4:3</option>
+			<option value="1.33">1.33</option>
+			<option value="1.66">1.66</option>
+			<option value="1.77">1.77</option>
+			<option value="1.85">1.85</option>
+			<option value="2.35">2.35</option>
+			<option value="2.39">2.39</option>
+			<option value="2.40">2.40</option>
+		</select>
+
+		<div class="input-group">
+			<span class="field-label">가로(Width):</span>
+			<input type="number" id="ent_w" placeholder="Width" onkeyup="calculate('h')">
+			
+			<button id="lockBtn" onclick="toggle()">🔗</button>
+			
+			<span class="field-label">세로(Height):</span>
+			<input type="number" id="ent_h" placeholder="Height" onkeyup="calculate('w')">
+			
+			<span class="unit">px</span>
+		</div>
+
+        <p class="footer">수치를 입력하면 즉시 자동 계산됩니다</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
