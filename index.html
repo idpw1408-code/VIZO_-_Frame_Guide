@@ -307,7 +307,7 @@
             <!-- STEP 3: 목표 종횡비 -->
             <label class="title">③ 목표 종횡비 선택</label>
             <div class="phys-ratio-row">
-                <select id="physRatioSelect" onchange="physUpdateResult()">
+                <select id="physRatioSelect">
                     <option value="2.35">2.35 : 1 (시네마스코프)</option>
                     <option value="2.39">2.39 : 1 (아나모픽 와이드스크린)</option>
                     <option value="2.40">2.40 : 1 (최신 시네마 규격)</option>
@@ -401,6 +401,61 @@
 
     <script src="script.js"></script>
     <script>
+        /* ══════════════════════════════
+           PIXEL MODE (from script.js)
+        ══════════════════════════════ */
+        let lockStatus = true;
+        let savedRatio = 16 / 9;
+
+        window.addEventListener('load', function () {
+            document.getElementById('ent_w').value = 1920;
+            document.getElementById('ent_h').value = 1080;
+        });
+
+        function calculate(target) {
+            if (!lockStatus) return;
+            const entW = document.getElementById('ent_w');
+            const entH = document.getElementById('ent_h');
+            const combo = document.getElementById('ratioSelect');
+            let ratio = (combo.value === "Custom") ? savedRatio : parseFloat(combo.value);
+            if (target === 'h' && entW.value) {
+                entH.value = Math.round(entW.value / ratio);
+            } else if (target === 'w' && entH.value) {
+                entW.value = Math.round(entH.value * ratio);
+            }
+        }
+
+        function toggle() {
+            lockStatus = !lockStatus;
+            const btn   = document.getElementById('lockBtn');
+            const entW  = document.getElementById('ent_w');
+            const entH  = document.getElementById('ent_h');
+            if (lockStatus) {
+                btn.innerText = "🔗";
+                btn.style.color = "white";
+                if (entW.value && entH.value) savedRatio = entW.value / entH.value;
+            } else {
+                btn.innerText = "🔓";
+                btn.style.color = "#ff4757";
+                document.getElementById('ratioSelect').value = "Custom";
+            }
+        }
+
+        function onComboSelect() {
+            const combo = document.getElementById('ratioSelect');
+            if (combo.value !== "Custom") {
+                if (!lockStatus) toggle();
+                calculate('h');
+            }
+        }
+
+        function copyValue(id) {
+            const val = document.getElementById(id).value;
+            if (!val) return;
+            navigator.clipboard.writeText(val).then(() => {
+                alert("값이 복사되었습니다: " + val + "px");
+            });
+        }
         /* ══════════════════════════════
            TAB SWITCHER
         ══════════════════════════════ */
