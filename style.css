@@ -1,0 +1,84 @@
+body {
+    background-color: #2c2c2c;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+select {
+    background-color: white;
+    border: none;
+    padding: 5px;
+    width: 180px;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+input {
+    background-color: #3d3d3d;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 80px;
+    text-align: center;
+}
+
+button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.unit {
+    color: #aaaaaa;
+    margin-left: 5px;
+}
+
+.footer {
+    margin-top: 30px;
+    color: #00d1ff;
+    font-size: 14px;
+}
+
+/* 숫자 입력창 화살표 제거 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.field-label {
+    font-size: 14px;
+    color: #e0e0e0;
+    margin-right: 2px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* 간격을 살짝 좁혀서 한 줄에 잘 들어오게 조정 */
+}
