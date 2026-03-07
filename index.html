@@ -10,6 +10,7 @@
 </head>
 <body>
     <div class="container">
+    	<h1 class="main-title">AR Master</h1>
         <label class="title">종횡비 선택</label>
         
         <select id="ratioSelect" onchange="onComboSelect()">
@@ -33,7 +34,8 @@
 			
 			<button id="lockBtn" onclick="toggle()">🔗</button>
 			
-			<span class="field-label">세로(Height):</span>
+			<div class="input-group">
+            <label>세로 (Height):</label>
 			<input type="number" id="ent_h" placeholder="Height" onkeyup="calculate('w')">
 			
 			<span class="unit">px</span>
@@ -45,4 +47,5 @@
 </body>
 
 </html>
+
 
