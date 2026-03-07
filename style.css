@@ -9,17 +9,27 @@ body {
     margin: 0;
 }
 
+/* 전체 컨테이너 가운데 정렬 */
 .container {
-    width: 90%;
-    max-width: 400px; /* 너무 넓지 않게 제한 */
     text-align: center;
-    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* 제목 스타일 */
 .main-title {
     color: #00d1ff;
     margin-bottom: 20px;
+}
+
+/* 가로/세로 입력을 한 줄로 배치 */
+.input-row {
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: flex-end;   /* 라벨과 입력창 하단 맞춤 */
+    gap: 10px;               /* 요소 간 간격 */
+    margin: 20px 0;
 }
 
 .input-container {
@@ -30,10 +40,17 @@ body {
 }
 
 .input-group {
-    width: 100%;
     display: flex;
-    flex-direction: column; /* 라벨을 위로 올림 */
-    align-items: flex-start;
+    flex-direction: column; /* 라벨을 입력창 위로 */
+    align-items: center;
+    width: 35%;             /* 입력창 너비 비율 조정 */
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .title {
@@ -115,4 +132,10 @@ input::-webkit-inner-spin-button {
         padding: 10px;
     }
 }
+
+#lockBtn {
+    font-size: 20px;
+    padding-bottom: 10px; /* 입력창과 높이 맞추기 */
+}
+
 
