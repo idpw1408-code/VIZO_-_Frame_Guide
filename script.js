@@ -54,3 +54,26 @@ function copyValue(id) {
         alert("값이 복사되었습니다: " + val + "px");
     });
 }
+
+let lockStatus = true;
+
+function switchTab(mode) {
+    document.getElementById('pixel-tab').style.display = (mode === 'pixel') ? 'block' : 'none';
+    document.getElementById('physics-tab').style.display = (mode === 'physics') ? 'block' : 'none';
+}
+
+function calculatePhysics() {
+    const W = parseFloat(document.getElementById('phy_w').value);
+    const H = parseFloat(document.getElementById('phy_h').value);
+    const ratio = parseFloat(document.getElementById('phy_ratioSelect').value);
+
+    if (W && H && ratio) {
+        const targetH = W / ratio;
+        const eachMargin = (H - targetH) / 2;
+        
+        document.getElementById('result_margin').innerText = eachMargin.toFixed(1);
+        document.getElementById('result_area').innerText = `${W.toFixed(1)} x ${targetH.toFixed(1)}`;
+    }
+}
+
+// ... 기존 calculate, toggle, onComboSelect 함수 유지 ...

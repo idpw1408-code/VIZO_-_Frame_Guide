@@ -8,63 +8,640 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
+    <style>
+        /* ── Tab System ── */
+        .version-badge {
+            display: inline-block;
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+            font-weight: 300;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.04);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            background: transparent;
+            color: #aaa;
+            letter-spacing: 0.3px;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 209, 255, 0.15);
+            color: #00d1ff;
+            box-shadow: inset 0 0 0 1px rgba(0,209,255,0.3);
+        }
+
+        .tab-btn:not(.active):hover {
+            color: #ccc;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Physics Mode ── (레이아웃은 픽셀 모드 클래스 재사용) */
+
+        /* Result panel */
+        .phys-result-panel {
+            background: rgba(0, 209, 255, 0.05);
+            border: 1px solid rgba(0, 209, 255, 0.15);
+            border-radius: 14px;
+            padding: 20px 18px;
+            margin-top: 4px;
+        }
+
+        .phys-result-label {
+            display: block;
+            font-weight: bold;
+            color: #f0f0f0;
+            margin-bottom: 14px;
+            margin-top: 0;
+        }
+
+        .phys-result-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phys-result-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .phys-result-box label {
+            font-size: inherit;
+            color: #f0f0f0;
+        }
+
+        .phys-result-val {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #00d1ff;
+            min-width: 90px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .phys-result-val:hover {
+            background: rgba(0,209,255,0.1);
+        }
+
+        .phys-result-unit {
+            font-size: inherit;
+            color: #f0f0f0;
+        }
+
+        .phys-x-sep {
+            font-size: 18px;
+            color: #f0f0f0;
+            font-weight: 300;
+            padding-top: 14px;
+        }
+
+        .phys-copy-hint {
+            font-size: 14px;
+            color: #00d1ff; /* 픽셀 모드 .footer와 동일 */
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* Tape guide visual */
+        .tape-visual {
+            margin-top: 20px;
+        }
+
+        .tape-visual-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f0f0f0;
+        }
+
+        .tape-canvas-wrap {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #tapeCanvas {
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .tape-empty {
+            width: 100%;
+            height: 120px;
+            border: 1px dashed rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f0f0f0;
+            font-size: inherit;
+            text-align: center;
+        }
+
+        /* 여백 수치 박스 */
+        .margin-box {
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .margin-label {
+            font-size: inherit;
+            color: #f0f0f0;
+        }
+        .margin-val {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffd080;
+            min-width: 70px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        .margin-unit {
+            font-size: inherit;
+            color: #f0f0f0;
+        }
+        /* copy flash */
+        @keyframes copyFlash {
+            0%   { background: rgba(0,209,255,0.3); }
+            100% { background: rgba(255,255,255,0.06); }
+        }
+        .phys-result-val.copied {
+            animation: copyFlash 0.4s ease;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <h1 class="main-title">VIZO : Frame Guide</h1>
-        
-        <label class="title">종횡비 선택</label>
-        <select id="ratioSelect" onchange="onComboSelect()">
-            <option value="Custom">Custom (사용자 정의)</option>
-            <option value="1.7777777777777777" selected>16:9 (유튜브/일반 영상)</option>
-            <option value="2.1666666666666665">19.5:9 (스마트폰)</option>
-            <option value="1">1:1 (SNS 정사각형)</option>
-            <option value="1.3333333333333333">4:3 (고전 TV/사진)</option>
-            <option value="1.33">1.33 (디지털 시네마 표준)</option>
-            <option value="1.66">1.66 (유럽식 와이드스크린)</option>
-            <option value="1.77">1.77 (HDTV)</option>
-            <option value="1.85">1.85 (극장용 와이드스크린)</option>
-            <option value="2.35">2.35 (시네마스코프)</option>
-            <option value="2.39">2.39 (아나모픽 와이드스크린)</option>
-            <option value="2.40">2.40 (최신 시네마 규격)</option>
-        </select>
+        <span class="version-badge">v 1.2.0</span>
 
-        <div class="input-row">
-            <div class="input-field">
-                <label>가로(Width)</label>
-                <div class="input-wrapper">
-                    <input type="number" id="ent_w" placeholder="Width" onkeyup="calculate('h')">
-                    <span class="unit">px</span>
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('pixel')">📐 픽셀 모드</button>
+            <button class="tab-btn"        onclick="switchTab('phys')">📏 물리 모드</button>
+        </div>
+
+        <!-- ═══════════════════════════════ TAB 1: PIXEL MODE ═══════════════════════════════ -->
+        <div id="tab-pixel" class="tab-panel active">
+            <label class="title">종횡비 선택</label>
+            <select id="ratioSelect" onchange="onComboSelect()">
+                <option value="Custom">Custom (사용자 정의)</option>
+                <option value="1.7777777777777777" selected>16:9 (유튜브/일반 영상)</option>
+                <option value="2.1666666666666665">19.5:9 (스마트폰)</option>
+                <option value="1">1:1 (SNS 정사각형)</option>
+                <option value="1.3333333333333333">4:3 (고전 TV/사진)</option>
+                <option value="1.33">1.33 (디지털 시네마 표준)</option>
+                <option value="1.66">1.66 (유럽식 와이드스크린)</option>
+                <option value="1.77">1.77 (HDTV)</option>
+                <option value="1.85">1.85 (극장용 와이드스크린)</option>
+                <option value="2.35">2.35 (시네마스코프)</option>
+                <option value="2.39">2.39 (아나모픽 와이드스크린)</option>
+                <option value="2.40">2.40 (최신 시네마 규격)</option>
+            </select>
+
+            <div class="input-row">
+                <div class="input-field">
+                    <label>가로(Width)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="ent_w" placeholder="Width" onkeyup="calculate('h')">
+                        <span class="unit">px</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyValue('ent_w')">Copy</button>
                 </div>
-                <button class="copy-btn" onclick="copyValue('ent_w')">Copy</button>
+
+                <button id="lockBtn" onclick="toggle()">🔗</button>
+
+                <div class="input-field">
+                    <label>세로(Height)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="ent_h" placeholder="Height" onkeyup="calculate('w')">
+                        <span class="unit">px</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyValue('ent_h')">Copy</button>
+                </div>
             </div>
-            
-            <button id="lockBtn" onclick="toggle()">🔗</button>
-            
-            <div class="input-field">
-                <label>세로(Height)</label>
-                <div class="input-wrapper">
-                    <input type="number" id="ent_h" placeholder="Height" onkeyup="calculate('w')">
-                    <span class="unit">px</span>
-                </div>
-                <button class="copy-btn" onclick="copyValue('ent_h')">Copy</button>
+
+            <p class="footer">수치를 입력하면 즉시 자동 계산됩니다</p>
+
+            <div class="info-panel">
+                <h3>해상도 가이드</h3>
+                <ul>
+                    <li><strong>SD:</strong> 854 x 480 - 과거 낮은 화질</li>
+                    <li><strong>HD:</strong> 1280 x 720 - HD급 화질</li>
+                    <li><strong>FHD:</strong> 1920 x 1080 - 가장 대중적인 규격</li>
+                    <li><strong>QHD:</strong> 2560 x 1440 - FHD 2배 화질</li>
+                    <li><strong>UHD(4K):</strong> 3840 x 2160 - 고화질 표준</li>
+                    <li><strong>8K UHD:</strong> 7680 x 4320 - 초고화질</li>
+                </ul>
             </div>
         </div>
-        
-        <p class="footer">수치를 입력하면 즉시 자동 계산됩니다</p>
 
-        <div class="info-panel">
-            <h3>해상도 가이드</h3>
-            <ul>
-                <li><strong>SD:</strong> 854 x 480 - 과거 낮은 화질</li>
-                <li><strong>HD:</strong> 1280 x 720 - HD급 화질</li>
-                <li><strong>FHD:</strong> 1920 x 1080 - 가장 대중적인 규격</li>
-                <li><strong>QHD:</strong> 2560 x 1440 - FHD 2배 화질</li>
-                <li><strong>UHD(4K):</strong> 3840 x 2160 - 고화질 표준</li>
-                <li><strong>8K UHD:</strong> 7680 x 4320 - 초고화질</li>
-            </ul>
+        <!-- ═══════════════════════════════ TAB 2: PHYSICS MODE ═══════════════════════════════ -->
+        <div id="tab-phys" class="tab-panel">
+
+            <!-- STEP 1: 모니터 비율 -->
+            <label class="title">① 모니터 비율</label>
+            <div class="phys-ratio-row">
+                <select id="monitorRatioSelect" onchange="onMonitorRatioChange()">
+                    <option value="16/9" selected>16:9 (현장 표준)</option>
+                    <option value="custom">Custom (직접 입력)</option>
+                </select>
+            </div>
+
+            <!-- STEP 2: 모니터 실측 입력 -->
+            <label class="title">② 모니터 실측 가로 입력 (mm)</label>
+            <div class="input-row">
+                <div class="input-field">
+                    <label>가로(Width)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="phys_w" placeholder="ex) 160" oninput="onPhysWInput()">
+                        <span class="unit">mm</span>
+                    </div>
+                </div>
+                <div class="input-field" id="phys_h_field">
+                    <label>세로(Height)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="phys_h" placeholder="자동" oninput="onPhysHInput()" readonly>
+                        <span class="unit">mm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: 목표 종횡비 -->
+            <label class="title">③ 목표 종횡비 선택</label>
+            <div class="phys-ratio-row">
+                <select id="physRatioSelect" onchange="physUpdateResult()">
+                    <option value="2.35">2.35 : 1 (시네마스코프)</option>
+                    <option value="2.39">2.39 : 1 (아나모픽 와이드스크린)</option>
+                    <option value="2.40">2.40 : 1 (최신 시네마 규격)</option>
+                    <option value="1.85">1.85 : 1 (극장용 와이드스크린)</option>
+                    <option value="1.7777777777777777">16:9 — 1.78 : 1</option>
+                    <option value="1.66">1.66 : 1 (유럽식 와이드스크린)</option>
+                    <option value="1.3333333333333333">4:3 — 1.33 : 1</option>
+                    <option value="1">1 : 1 (정사각형)</option>
+                    <option value="custom_target">Custom (직접 입력)</option>
+                </select>
+            </div>
+            <!-- Custom 목표 종횡비 직접 입력 -->
+            <div id="customTargetRow" style="display:none; margin-bottom:30px;">
+                <label class="title">목표 비율 직접 입력 (가로 ÷ 세로)</label>
+                <input type="number" id="customRatioVal" placeholder="ex) 2.35" step="0.01"
+                       style="width:90px;" oninput="physUpdateResult()">
+            </div>
+
+            <!-- 결과값 -->
+            <div class="phys-result-panel">
+                <label class="title" style="margin-bottom:14px;">④ 테이프 마킹 결과</label>
+
+                <!-- 가이드 프레임 크기 -->
+                <label class="title">종횡비 적용 프레임 크기</label>
+                <div class="input-row" style="margin-bottom:20px;">
+                    <div class="input-field">
+                        <label>가로</label>
+                        <div class="phys-result-val" id="phys_res_w" onclick="physCopyResult('phys_res_w')">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                    <span class="phys-x-sep">×</span>
+                    <div class="input-field">
+                        <label>세로</label>
+                        <div class="phys-result-val" id="phys_res_h" onclick="physCopyResult('phys_res_h')">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                </div>
+
+                <!-- 구분선 -->
+                <div style="border-top:1px solid rgba(255,255,255,0.07);margin-bottom:16px;"></div>
+
+                <!-- 여백 수치 -->
+                <label class="title">테이프 위치 — 모니터 가장자리에서 안쪽으로</label>
+                <div class="input-row" style="flex-wrap:wrap; margin-bottom:0;">
+                    <div class="input-field margin-box" id="box_top" style="display:none;">
+                        <label>상단</label>
+                        <div class="margin-val" id="val_top">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                    <div class="input-field margin-box" id="box_bot" style="display:none;">
+                        <label>하단</label>
+                        <div class="margin-val" id="val_bot">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                    <div class="input-field margin-box" id="box_left" style="display:none;">
+                        <label>좌측</label>
+                        <div class="margin-val" id="val_left">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                    <div class="input-field margin-box" id="box_right" style="display:none;">
+                        <label>우측</label>
+                        <div class="margin-val" id="val_right">—</div>
+                        <span class="unit">mm</span>
+                    </div>
+                    <span id="marginPlaceholder">수치 입력 후 표시됩니다</span>
+                </div>
+
+                <p class="phys-copy-hint">결과값 클릭 시 복사됩니다</p>
+            </div>
+
+            <!-- 테이프 시각화 -->
+            <div class="tape-visual">
+                <label class="title">테이프 마킹 시뮬레이션</label>
+                <div class="tape-canvas-wrap">
+                    <div class="tape-empty" id="tapeEmpty">모니터 크기와 종횡비를 입력하면<br>마킹 위치가 표시됩니다</div>
+                    <canvas id="tapeCanvas" style="display:none;"></canvas>
+                </div>
+            </div>
+
+            <div class="info-panel" style="margin-top:20px;">
+                <h3>📼 물리 모드 사용법</h3>
+                <ul>
+                    <li>① 모니터 비율 — 대부분의 현장 모니터는 <strong>16:9</strong> 고정</li>
+                    <li>② 모니터 가로 실측값(mm)을 입력하면 세로는 자동 계산</li>
+                    <li>③ 목표 종횡비 선택 (예: 2.35:1 시네마스코프)</li>
+                    <li>④ 결과에서 <strong>상단/하단 여백</strong>을 확인 후 해당 위치에 테이프를 붙이세요</li>
+                </ul>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
+    <script>
+        /* ══════════════════════════════
+           TAB SWITCHER
+        ══════════════════════════════ */
+        function switchTab(name) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        /* ══════════════════════════════
+           PHYSICS MODE
+        ══════════════════════════════ */
+
+        // ── 모니터 비율 변경 ──
+        function onMonitorRatioChange() {
+            const sel = document.getElementById('monitorRatioSelect');
+            const hInput = document.getElementById('phys_h');
+            const wInput = document.getElementById('phys_w');
+
+            if (sel.value === 'custom') {
+                // Custom: 세로 직접 입력 가능
+                hInput.removeAttribute('readonly');
+                hInput.placeholder = 'ex) 90';
+                hInput.value = '';
+                // 세로 필드 항상 표시 (이미 표시 중)
+            } else {
+                // 16:9 고정: 세로 자동 계산
+                hInput.setAttribute('readonly', true);
+                hInput.placeholder = '자동';
+                if (wInput.value) {
+                    hInput.value = Math.round(wInput.value / (16/9) * 10) / 10;
+                }
+            }
+            physUpdateResult();
+        }
+
+        // ── 가로 입력 시 ──
+        function onPhysWInput() {
+            const sel = document.getElementById('monitorRatioSelect');
+            const wInput = document.getElementById('phys_w');
+            const hInput = document.getElementById('phys_h');
+
+            if (sel.value === '16/9') {
+                // 16:9 고정이면 세로 자동 계산
+                hInput.value = wInput.value
+                    ? Math.round(wInput.value / (16/9) * 10) / 10
+                    : '';
+            }
+            physUpdateResult();
+        }
+
+        // ── 세로 입력 시 (Custom 전용) ──
+        function onPhysHInput() {
+            physUpdateResult();
+        }
+
+        // ── 목표 종횡비 드롭다운 ──
+        function onPhysRatioSelectChange() {
+            const sel = document.getElementById('physRatioSelect');
+            const customRow = document.getElementById('customTargetRow');
+            customRow.style.display = sel.value === 'custom_target' ? 'block' : 'none';
+            physUpdateResult();
+        }
+
+        // ── 목표 종횡비 값 가져오기 ──
+        function getTargetRatio() {
+            const sel = document.getElementById('physRatioSelect');
+            if (sel.value === 'custom_target') {
+                const v = parseFloat(document.getElementById('customRatioVal').value);
+                return isNaN(v) ? null : v;
+            }
+            return parseFloat(sel.value);
+        }
+
+        /* ── 결과 계산 ── */
+        function physUpdateResult() {
+            const monW = parseFloat(document.getElementById('phys_w').value);
+            const monH = parseFloat(document.getElementById('phys_h').value);
+            const resW = document.getElementById('phys_res_w');
+            const resH = document.getElementById('phys_res_h');
+
+            if (!monW || !monH) {
+                resW.textContent = '—';
+                resH.textContent = '—';
+                hideTapeCanvas();
+                return;
+            }
+
+            const targetRatio = getTargetRatio();
+            if (!targetRatio) {
+                resW.textContent = '—';
+                resH.textContent = '—';
+                hideTapeCanvas();
+                return;
+            }
+
+            const monRatio = monW / monH;
+
+            let guideW, guideH;
+            if (targetRatio <= monRatio) {
+                // 세로 기준 (레터박스 → 상하 여백)
+                guideH = monH;
+                guideW = Math.round(monH * targetRatio * 100) / 100;
+            } else {
+                // 가로 기준 (필러박스 → 좌우 여백)
+                guideW = monW;
+                guideH = Math.round(monW / targetRatio * 100) / 100;
+            }
+
+            resW.textContent = guideW;
+            resH.textContent = guideH;
+
+            // 여백 = (모니터 치수 - 가이드 치수) / 2
+            const marginTB = Math.round((monH - guideH) / 2 * 100) / 100;
+            const marginLR = Math.round((monW - guideW) / 2 * 100) / 100;
+
+            const placeholder = document.getElementById('marginPlaceholder');
+            placeholder.style.display = 'none';
+
+            const showBox = (id, valId, val) => {
+                const box = document.getElementById(id);
+                box.style.display = val > 0 ? 'flex' : 'none';
+                document.getElementById(valId).textContent = val > 0 ? val : '—';
+            };
+            showBox('box_top',   'val_top',   marginTB);
+            showBox('box_bot',   'val_bot',   marginTB);
+            showBox('box_left',  'val_left',  marginLR);
+            showBox('box_right', 'val_right', marginLR);
+
+            drawTapeCanvas(monW, monH, guideW, guideH);
+        }
+
+        // select onchange 연결
+        document.getElementById('physRatioSelect').addEventListener('change', onPhysRatioSelectChange);
+
+        /* ── Canvas 시각화 ── */
+        function drawTapeCanvas(monW, monH, guideW, guideH) {
+            const canvas = document.getElementById('tapeCanvas');
+            const empty  = document.getElementById('tapeEmpty');
+            const maxW   = Math.min(380, canvas.parentElement.clientWidth - 10);
+            const scale  = maxW / monW;
+            canvas.width  = monW * scale;
+            canvas.height = monH * scale;
+            canvas.style.display = 'block';
+            empty.style.display  = 'none';
+
+            const ctx = canvas.getContext('2d');
+            const cW = canvas.width, cH = canvas.height;
+            const gW = guideW * scale, gH = guideH * scale;
+            const ox = (cW - gW) / 2, oy = (cH - gH) / 2;
+
+            /* 모니터 배경 */
+            ctx.clearRect(0, 0, cW, cH);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.beginPath(); roundRect(ctx, 0, 0, cW, cH, 8); ctx.fill();
+
+            /* 모니터 그리드 (미세한 격자) */
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 0.5;
+            const step = 20;
+            for (let x = 0; x < cW; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, cH); ctx.stroke(); }
+            for (let y = 0; y < cH; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cW, y); ctx.stroke(); }
+
+            /* 마스크 영역 (잘리는 부분) */
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            if (oy > 0) {
+                ctx.fillRect(0,  0,    cW, oy);
+                ctx.fillRect(0,  oy+gH, cW, oy);
+            }
+            if (ox > 0) {
+                ctx.fillRect(0,   oy, ox, gH);
+                ctx.fillRect(ox+gW, oy, ox, gH);
+            }
+
+            /* 가이드 프레임 영역 */
+            ctx.fillStyle = 'rgba(0, 209, 255, 0.06)';
+            ctx.fillRect(ox, oy, gW, gH);
+
+            /* 테이프 선 */
+            const tapeColor = '#00d1ff';
+            const tapeDash  = [6, 3];
+            ctx.strokeStyle = tapeColor;
+            ctx.lineWidth   = 2;
+            ctx.setLineDash(tapeDash);
+            ctx.strokeRect(ox, oy, gW, gH);
+            ctx.setLineDash([]);
+
+            /* 모서리 강조 */
+            const cornerLen = 12;
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth   = 2;
+            [[ox, oy],[ox+gW, oy],[ox, oy+gH],[ox+gW, oy+gH]].forEach(([cx, cy], i) => {
+                const dx = (i % 2 === 0) ? 1 : -1;
+                const dy = (i < 2)       ? 1 : -1;
+                ctx.beginPath();
+                ctx.moveTo(cx + dx * cornerLen, cy);
+                ctx.lineTo(cx, cy);
+                ctx.lineTo(cx, cy + dy * cornerLen);
+                ctx.stroke();
+            });
+
+            /* 치수 표시 */
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.fillRect(ox + gW/2 - 36, oy + gH/2 - 11, 72, 22);
+            ctx.fillStyle = '#00d1ff';
+            ctx.font = 'bold 11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(guideW + ' × ' + guideH + ' mm', ox + gW/2, oy + gH/2);
+        }
+
+        function hideTapeCanvas() {
+            document.getElementById('tapeCanvas').style.display = 'none';
+            document.getElementById('tapeEmpty').style.display  = 'flex';
+            ['box_top','box_bot','box_left','box_right'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById('marginPlaceholder').style.display = 'inline';
+        }
+
+        function roundRect(ctx, x, y, w, h, r) {
+            ctx.moveTo(x+r, y);
+            ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+            ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+            ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+            ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+            ctx.closePath();
+        }
+
+        /* 결과값 복사 */
+        function physCopyResult(id) {
+            const el = document.getElementById(id);
+            const val = el.textContent;
+            if (val === '—') return;
+            navigator.clipboard.writeText(val + 'mm').then(() => {
+                el.classList.remove('copied');
+                void el.offsetWidth;
+                el.classList.add('copied');
+            });
+        }
+    </script>
 </body>
 </html>
