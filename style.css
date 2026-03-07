@@ -5,21 +5,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
 }
 
 .container {
-    width: 90%;          /* 화면 너비의 90% 사용 */
-    max-width: 500px;    /* 너무 커지는 것 방지 */
-    margin: 0 auto;      /* 중앙 정렬 */
+    width: 90%;
+    max-width: 400px; /* 너무 넓지 않게 제한 */
+    text-align: center;
     padding: 20px;
 }
 
-input, select {
-    width: 100%;         /* 부모 요소(container)에 꽉 차게 */
-    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+/* 제목 스타일 */
+.main-title {
+    color: #00d1ff;
+    margin-bottom: 20px;
 }
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* 라벨을 위로 올림 */
+    align-items: flex-start;
+}
+
 .title {
     display: block;
     font-weight: bold;
@@ -41,22 +57,23 @@ select {
     gap: 10px;
 }
 
-input {
+input, select {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
     background-color: #3d3d3d;
     color: white;
     border: none;
-    padding: 10px;
-    width: 80px;
-    text-align: center;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
 button {
+    font-size: 24px;
+    cursor: pointer;
     background: none;
     border: none;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    padding: 0 10px;
+    margin: 5px 0;
 }
 
 .unit {
@@ -65,9 +82,8 @@ button {
 }
 
 .footer {
-    margin-top: 30px;
-    color: #00d1ff;
-    font-size: 14px;
+    margin-top: 20px;
+    color: #aaaaaa;
 }
 
 /* 숫자 입력창 화살표 제거 */
@@ -99,3 +115,4 @@ input::-webkit-inner-spin-button {
         padding: 10px;
     }
 }
+
