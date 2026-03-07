@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
 body {
-    background-color: #2c2c2c;
-    color: white;
-    font-family: 'Arial', sans-serif;
+    background: radial-gradient(circle at center, #333333, #1a1a1a);
+    color: #f0f0f0;
+    font-family: 'Inter', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,76 +14,57 @@ body {
 .container {
     text-align: center;
     width: 90%;
-    max-width: 500px;
-    margin: 0 auto;
+    max-width: 450px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 
-.main-title { color: #00d1ff; margin-bottom: 20px; }
+.main-title { color: #00d1ff; font-weight: 600; margin-bottom: 30px; }
 .title { display: block; font-weight: bold; margin-bottom: 10px; }
 
 select {
-    background-color: white;
-    border: none;
-    padding: 10px;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 12px;
     width: 100%;
     max-width: 300px;
     margin-bottom: 30px;
-    border-radius: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
 }
 
-.input-row {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.input-field {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.input-field label {
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #e0e0e0;
-}
-
-/* 입력창과 px를 가로로 배치하는 핵심 */
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+.input-row { display: flex; justify-content: center; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+.input-field { display: flex; flex-direction: column; align-items: center; }
+.input-wrapper { display: flex; align-items: center; gap: 5px; }
 
 input {
-    width: 70px;
-    padding: 10px;
-    background-color: #3d3d3d;
+    width: 80px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     text-align: center;
 }
 
-.unit { color: #aaaaaa; font-size: 0.9rem; }
+.copy-btn { cursor: pointer; font-size: 11px; color: #00d1ff; margin-top: 5px; background: none; border: none; text-decoration: underline; }
+button#lockBtn { background: none; border: none; font-size: 24px; cursor: pointer; color: white; padding-top: 25px; }
+.footer { color: #00d1ff; font-size: 14px; margin-top: 20px; }
 
-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding-bottom: 5px;
-    color: white;
+.info-panel {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border-left: 4px solid #00d1ff;
+    text-align: left;
+    color: #ccc;
+    font-size: 0.9rem;
 }
-
-.footer { color: #00d1ff; font-size: 14px; }
-
-/* 숫자 증감 화살표 제거 */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+.info-panel h3 { color: #00d1ff; margin-top: 0; }
+.info-panel ul { padding-left: 20px; line-height: 1.8; }
