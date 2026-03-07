@@ -1,3 +1,89 @@
+# VIZO : Frame Guide
+
+A lightweight, offline-ready tool for video production — calculate frame dimensions instantly by aspect ratio.
+
+> 영상 제작 현장을 위한 경량 오프라인 프레임 가이드 계산기
+
+---
+
+## Changelog / 업데이트 내역
+
+### v1.2.0
+**English**
+
+- **Tab UI** — The interface is now split into two tabs: *Pixel Mode* and *Physics Mode*
+- **Physics Mode (new)** — A new mode designed for on-set monitor marking
+  - Monitor ratio is locked to **16:9** by default (the standard for most production monitors), with a Custom option for manual input
+  - Enter the monitor's actual width in **mm** — height is calculated automatically
+  - Select a target aspect ratio (e.g. 2.35:1 Cinemascope)
+  - Results show the **guide frame size** (W × H in mm) and the **tape marking offset** for each edge (top / bottom / left / right in mm)
+  - Canvas preview renders the tape guide position visually on the monitor
+- **Visual consistency** — Pixel Mode and Physics Mode now share identical layout, typography, and color language
+
+**한국어**
+
+- **탭 UI 추가** — 인터페이스가 *픽셀 모드*와 *물리 모드* 두 탭으로 분리됨
+- **물리 모드 신규 추가** — 현장 모니터에 테이프로 가이드를 붙이기 위한 실측 계산 모드
+  - 모니터 비율은 기본값 **16:9** 고정 (현장 표준), Custom 선택 시 직접 입력 가능
+  - 모니터 실측 가로(mm) 입력 시 세로 자동 계산
+  - 목표 종횡비 선택 (예: 2.35:1 시네마스코프)
+  - 결과값: **종횡비 적용 프레임 크기** (가로 × 세로 mm) + **테이프 마킹 위치** (상/하/좌/우 각각 mm)
+  - Canvas 프리뷰로 모니터 위 테이프 위치를 시각적으로 확인 가능
+- **UI 일관성 개선** — 픽셀 모드와 물리 모드의 레이아웃, 서체, 색상이 완전히 통일됨
+
+---
+
+### v1.1.0
+**English**
+- Initial release with Pixel Mode
+- Aspect ratio selector with common presets (16:9, 4:3, 2.35, 2.39, 2.40, etc.)
+- Lock / unlock chain for width–height coupling
+- One-click copy for width and height values
+
+**한국어**
+- 픽셀 모드 최초 출시
+- 16:9, 4:3, 2.35, 2.39, 2.40 등 주요 종횡비 프리셋 지원
+- 가로·세로 연동 체인 잠금/해제 기능
+- 가로·세로 값 원클릭 복사
+
+---
+
+## Usage / 사용법
+
+### Pixel Mode / 픽셀 모드
+1. Select an aspect ratio from the dropdown
+2. Enter width or height in px — the other value is calculated automatically
+3. Click **Copy** to copy either value
+
+> 종횡비를 선택하고 가로 또는 세로 픽셀값을 입력하면 나머지가 자동 계산됩니다.
+
+### Physics Mode / 물리 모드
+1. Set monitor ratio — leave as **16:9** for most production monitors
+2. Enter the monitor's actual screen width in **mm** (measure with a ruler)
+3. Select the target aspect ratio
+4. Read the guide frame size and tape offset for each edge
+5. Place tape on the monitor at the indicated distances from each edge
+
+> 모니터 실측 가로(mm)를 입력하고 목표 종횡비를 선택하면, 테이프를 붙여야 할 위치(각 가장자리에서 몇 mm 안쪽인지)가 계산됩니다.
+
+---
+
+## Files / 파일 구성
+
+| File | Description |
+|------|-------------|
+| `index.html` | Main application / 메인 앱 |
+| `style.css` | Global styles / 전역 스타일 |
+| `script.js` | Pixel Mode logic / 픽셀 모드 로직 |
+| `manifest.json` | PWA manifest |
+| `icon.png` | App icon |
+
+---
+
+## License
+MIT
+
+
 VIZO : Frame Guide (v1.1)
 [English]
 VIZO : Frame Guide is a versatile tool designed to calculate image dimensions based on aspect ratios. It is available as a Progressive Web App (PWA) for instant web access and as a Native Desktop Application (.exe) for offline use.
