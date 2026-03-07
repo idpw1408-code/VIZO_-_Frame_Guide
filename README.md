@@ -1,2 +1,2 @@
-# note-log
-I create and save things that I need, and I hope they might be helpful for you too
+# AR_master v1.0
+I’m a video editor, and I’ve always had to make awkward calculations to figure out resolutions from aspect ratios. So I created this with AI.
