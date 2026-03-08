@@ -1,702 +1,767 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIZO : Frame Guide</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <style>
-        /* ── Tab System ── */
-        .version-badge {
-            display: inline-block;
-            font-size: 10px;
-            color: #888;
-            letter-spacing: 1px;
-            margin-bottom: 18px;
-            font-weight: 300;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIZO : Frame Guide</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VIZO Frame">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+    --black:   #0a0a0a;
+    --surface: #141414;
+    --card:    #1c1c1c;
+    --border:  #2c2c2c;
+    --muted:   #3a3a3a;
+    --text:    #e6e6e6;
+    --dim:     #888;
+    --cyan:    #00d1ff;
+    --amber:   #f5a623;
+    --red:     #ff4757;
+    --mono:    'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body { font-family: var(--mono); background: var(--black); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.35;
+}
+.app { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 36px 24px 80px; animation: fadeUp 0.45s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 
-        .tab-bar {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 28px;
-            background: rgba(255,255,255,0.04);
-            padding: 5px;
-            border-radius: 12px;
-        }
+/* HEADER */
+header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 28px; }
+.logo { font-family: var(--display); font-size: clamp(1.3rem,2.8vw,1.9rem); font-weight: 800; letter-spacing: -1px; color: var(--cyan); }
+.logo span { color: var(--dim); font-weight: 400; }
+.version { font-size: 0.68rem; color: var(--muted); border: 1px solid var(--border); padding: 2px 8px; border-radius: 20px; letter-spacing: 1px; }
+.header-sub { margin-left: auto; font-size: 0.72rem; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; }
 
-        .tab-btn {
-            flex: 1;
-            padding: 10px 12px;
-            border: none;
-            border-radius: 9px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.25s ease;
-            background: transparent;
-            color: #aaa;
-            letter-spacing: 0.3px;
-        }
+/* TABS */
+.tab-bar { display: flex; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 5px; margin-bottom: 26px; width: fit-content; }
+.tab-btn { padding: 9px 20px; border: none; border-radius: 9px; font-family: var(--display); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--dim); }
+.tab-btn.active { background: rgba(0,209,255,0.12); color: var(--cyan); box-shadow: inset 0 0 0 1px rgba(0,209,255,0.25); }
+.tab-btn:not(.active):hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
-        .tab-btn.active {
-            background: rgba(0, 209, 255, 0.15);
-            color: #00d1ff;
-            box-shadow: inset 0 0 0 1px rgba(0,209,255,0.3);
-        }
+/* WORKSPACE */
+.workspace { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: start; }
+.col-left, .col-right { display: flex; flex-direction: column; gap: 14px; }
 
-        .tab-btn:not(.active):hover {
-            color: #ccc;
-            background: rgba(255,255,255,0.05);
-        }
+/* PANEL */
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.panel-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 9px; }
+.panel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 7px var(--cyan); flex-shrink: 0; }
+.panel-dot.amber { background: var(--amber); box-shadow: 0 0 7px var(--amber); }
+.panel-dot.dim   { background: var(--muted); box-shadow: none; }
+.panel-title { font-family: var(--display); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--dim); }
+.panel-body { padding: 18px; }
 
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
+/* FIELDS */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.field-label { display: block; font-size: 0.65rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 7px; }
+.step-label { display: flex; align-items: center; gap: 8px; font-size: 0.65rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 7px; }
+.step-badge { background: rgba(0,209,255,0.1); color: var(--cyan); border: 1px solid rgba(0,209,255,0.2); border-radius: 20px; font-size: 0.6rem; padding: 1px 7px; font-family: var(--display); font-weight: 700; }
 
-        /* ── Physics Mode ── (레이아웃은 픽셀 모드 클래스 재사용) */
+select { width: 100%; max-width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--mono); font-size: 0.82rem; padding: 10px 30px 10px 11px; outline: none; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 11px center; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+select:focus { border-color: var(--cyan); }
+select option { background: var(--card); }
 
-        /* Result panel */
-        .phys-result-panel {
-            background: rgba(0, 209, 255, 0.05);
-            border: 1px solid rgba(0, 209, 255, 0.15);
-            border-radius: 14px;
-            padding: 20px 18px;
-            margin-top: 4px;
-        }
+.num-pair { display: flex; align-items: center; gap: 8px; }
+.num-sep { color: var(--dim); font-size: 1rem; flex-shrink: 0; }
+input[type=number] { flex: 1; min-width: 0; width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--mono); font-size: 0.88rem; padding: 9px 8px; text-align: center; outline: none; transition: border-color 0.2s; -moz-appearance: textfield; }
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+input[type=number]:focus { border-color: var(--cyan); }
+input[type=number][readonly] { color: var(--dim); cursor: default; }
 
-        .phys-result-label {
-            display: block;
-            font-weight: bold;
-            color: #f0f0f0;
-            margin-bottom: 14px;
-            margin-top: 0;
-        }
+.lock-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 1.2rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: border-color 0.2s; }
+.lock-btn:hover { border-color: var(--cyan); }
 
-        .phys-result-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
+.copy-row { display: flex; gap: 8px; margin-top: 10px; }
+.copy-btn { flex: 1; background: transparent; border: 1px solid var(--border); border-radius: 7px; color: var(--dim); font-family: var(--mono); font-size: 0.68rem; padding: 6px; cursor: pointer; transition: all 0.2s; text-align: center; }
+.copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
 
-        .phys-result-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
 
-        .phys-result-box label {
-            font-size: inherit;
-            color: #f0f0f0;
-        }
+/* RESULT display */
+.result-display { display: flex; gap: 10px; margin-bottom: 0; }
+.result-box { flex: 1; background: rgba(0,209,255,0.05); border: 1px solid rgba(0,209,255,0.15); border-radius: 10px; padding: 12px 10px; text-align: center; }
+.result-box-label { font-size: 0.6rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.result-box-val { font-size: 1.1rem; font-weight: 500; color: var(--cyan); font-variant-numeric: tabular-nums; }
+.result-box-unit { font-size: 0.65rem; color: var(--dim); }
 
-        .phys-result-val {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-size: 20px;
-            font-weight: 600;
-            color: #00d1ff;
-            min-width: 90px;
-            text-align: center;
-            font-variant-numeric: tabular-nums;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+/* INFO PANEL */
+.info-panel { background: rgba(0,209,255,0.03); border: 1px solid rgba(0,209,255,0.1); border-left: 3px solid var(--cyan); border-radius: 12px; padding: 16px; font-size: 0.8rem; color: #aaa; line-height: 1.7; }
+.info-panel h3 { font-family: var(--display); font-size: 0.75rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.info-panel ul { padding-left: 16px; }
+.info-panel li { margin-bottom: 2px; }
 
-        .phys-result-val:hover {
-            background: rgba(0,209,255,0.1);
-        }
+/* BUTTONS */
+.btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-family: var(--display); font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.btn-cyan { background: rgba(0,209,255,0.12); border: 1px solid rgba(0,209,255,0.25); color: var(--cyan); }
+.btn-cyan:hover { background: rgba(0,209,255,0.2); box-shadow: 0 4px 16px rgba(0,209,255,0.15); }
 
-        .phys-result-unit {
-            font-size: inherit;
-            color: #f0f0f0;
-        }
+/* PHYSICS RESULT */
+.phys-result-panel { background: rgba(0,209,255,0.04); border: 1px solid rgba(0,209,255,0.15); border-radius: 12px; padding: 16px; }
+.phys-val-row { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 14px; }
+.phys-val-box { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.phys-val-box-label { font-size: 0.65rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+.phys-val { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; padding: 9px 14px; font-size: 1.1rem; font-weight: 500; color: var(--cyan); min-width: 80px; text-align: center; cursor: pointer; transition: background 0.2s; font-variant-numeric: tabular-nums; }
+.phys-val:hover { background: rgba(0,209,255,0.1); }
+.phys-val-unit { font-size: 0.65rem; color: var(--dim); }
+.phys-x { font-size: 1rem; color: var(--dim); padding-top: 14px; }
+.margin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+.margin-cell { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 10px; text-align: center; display: none; }
+.margin-cell.visible { display: block; }
+.margin-cell-label { font-size: 0.6rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.margin-cell-val { font-size: 1rem; font-weight: 500; color: #ffc26b; font-variant-numeric: tabular-nums; }
+.margin-cell-unit { font-size: 0.6rem; color: var(--dim); }
+.copy-hint { font-size: 0.68rem; color: var(--cyan); text-align: center; margin-top: 10px; }
+.tape-canvas-wrap { position: relative; width: 100%; display: flex; justify-content: center; }
+.tape-empty { width: 100%; height: 110px; border: 1px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--dim); font-size: 0.8rem; text-align: center; line-height: 1.6; }
+#tapeCanvas { border-radius: 8px; max-width: 100%; display: none; }
 
-        .phys-x-sep {
-            font-size: 18px;
-            color: #f0f0f0;
-            font-weight: 300;
-            padding-top: 14px;
-        }
+@keyframes copyFlash { 0% { background: rgba(0,209,255,0.35); } 100% { background: rgba(255,255,255,0.05); } }
+.phys-val.copied { animation: copyFlash 0.4s ease; }
 
-        .phys-copy-hint {
-            font-size: 14px;
-            color: #00d1ff; /* 픽셀 모드 .footer와 동일 */
-            margin-top: 12px;
-            text-align: center;
-        }
+/* LIVE BADGE */
+.live-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.62rem; color: #4caf50; letter-spacing: 1px; text-transform: uppercase; }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4caf50; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(0.7); } }
 
-        /* Tape guide visual */
-        .tape-visual {
-            margin-top: 20px;
-        }
+/* FRAME OVERLAY */
+#frameOverlay { display: none; position: fixed; inset: 0; z-index: 9999; background: #000; flex-direction: column; }
+#frameOverlay.active { display: flex; }
+#overlayBg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%); }
+#overlayCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ov-hud { position: absolute; top: 0; left: 0; right: 0; height: 56px; background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(0,209,255,0.15); display: flex; align-items: center; gap: 10px; padding: 0 16px; z-index: 2; backdrop-filter: blur(10px); }
+.ov-ratio-label { font-family: var(--display); font-size: 1.05rem; font-weight: 700; color: var(--cyan); letter-spacing: 2px; position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; }
+.ov-select { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-family: var(--mono); font-size: 0.78rem; padding: 8px 28px 8px 10px; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; min-width: 200px; }
+.ov-color-chip { width: 36px; height: 36px; border-radius: 7px; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; transition: border-color 0.2s; flex-shrink: 0; }
+.ov-color-chip.selected { border-color: rgba(255,255,255,0.8); }
+.ov-chip-black { background: rgba(0,0,0,0.8); color: rgba(255,255,255,0.5); }
+.ov-chip-green { background: rgba(0,140,50,0.5); color: #00e676; }
+.ov-center-chip { padding: 6px 12px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; font-family: var(--mono); font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); transition: all 0.2s; flex-shrink: 0; letter-spacing: 0.5px; }
+.ov-center-chip.selected { border-color: rgba(0,209,255,0.5); color: var(--cyan); background: rgba(0,209,255,0.1); }
+.ov-close-btn { margin-left: auto; background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3); border-radius: 8px; color: var(--red); font-family: var(--mono); font-size: 0.72rem; font-weight: 700; padding: 7px 14px; cursor: pointer; flex-shrink: 0; transition: background 0.2s; }
+.ov-close-btn:hover { background: rgba(255,71,87,0.25); }
 
-        .tape-visual-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #f0f0f0;
-        }
+/* F11 토스트 */
+#f11Toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.9); background: rgba(0,0,0,0.92); border: 1px solid rgba(0,209,255,0.3); border-radius: 16px; padding: 28px 40px; text-align: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; backdrop-filter: blur(20px); }
+#f11Toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.f11-key { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--cyan); letter-spacing: 3px; }
+.f11-msg { font-size: 0.8rem; color: var(--dim); margin-top: 8px; letter-spacing: 1px; }
 
-        .tape-canvas-wrap {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        #tapeCanvas {
-            border-radius: 8px;
-            max-width: 100%;
-        }
-
-        .tape-empty {
-            width: 100%;
-            height: 120px;
-            border: 1px dashed rgba(255,255,255,0.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #f0f0f0;
-            font-size: inherit;
-            text-align: center;
-        }
-
-        /* 여백 수치 박스 */
-        .margin-box {
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-        }
-        .margin-label {
-            font-size: inherit;
-            color: #f0f0f0;
-        }
-        .margin-val {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 8px;
-            padding: 7px 14px;
-            font-size: 17px;
-            font-weight: 600;
-            color: #ffd080;
-            min-width: 70px;
-            text-align: center;
-            font-variant-numeric: tabular-nums;
-        }
-        .margin-unit {
-            font-size: inherit;
-            color: #f0f0f0;
-        }
-        /* copy flash */
-        @keyframes copyFlash {
-            0%   { background: rgba(0,209,255,0.3); }
-            100% { background: rgba(255,255,255,0.06); }
-        }
-        .phys-result-val.copied {
-            animation: copyFlash 0.4s ease;
-        }
-    </style>
+/* MOBILE */
+@media (max-width: 760px) {
+    .app { padding: 20px 14px 60px; }
+    header { flex-wrap: wrap; margin-bottom: 20px; }
+    .header-sub { display: none; }
+    .workspace { grid-template-columns: 1fr; }
+    .tab-bar { width: 100%; }
+    .tab-btn { padding: 9px 12px; font-size: 0.7rem; flex: 1; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <h1 class="main-title">VIZO : Frame Guide</h1>
-        <span class="version-badge">v 1.2.0</span>
+<div class="app">
 
-        <!-- Tab Bar -->
-        <div class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('pixel')">📐 픽셀 모드</button>
-            <button class="tab-btn"        onclick="switchTab('phys')">📏 물리 모드</button>
-        </div>
+    <header>
+        <div class="logo">VIZO <span>:</span> Frame Guide</div>
+        <div class="version">v 1.3.1</div>
+        <button onclick="openFrameOverlay()" style="margin-left:auto;padding:9px 18px;font-size:0.72rem;font-family:var(--display);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:10px;border:1px solid rgba(245,166,35,0.35);background:rgba(245,166,35,0.1);color:var(--amber);transition:all 0.2s;" onmouseover="this.style.background='rgba(245,166,35,0.2)'" onmouseout="this.style.background='rgba(245,166,35,0.1)'">◉ &nbsp;DESKTOP OVERLAY</button>
+        <div class="header-sub" style="margin-left:16px;">Aspect Ratio Calculator</div>
+    </header>
 
-        <!-- ═══════════════════════════════ TAB 1: PIXEL MODE ═══════════════════════════════ -->
-        <div id="tab-pixel" class="tab-panel active">
-            <label class="title">종횡비 선택</label>
-            <select id="ratioSelect" onchange="onComboSelect()">
-                <option value="Custom">Custom (사용자 정의)</option>
-                <option value="1.7777777777777777" selected>16:9 (유튜브/일반 영상)</option>
-                <option value="2.1666666666666665">19.5:9 (스마트폰)</option>
-                <option value="1">1:1 (SNS 정사각형)</option>
-                <option value="1.3333333333333333">4:3 (고전 TV/사진)</option>
-                <option value="1.33">1.33 (디지털 시네마 표준)</option>
-                <option value="1.66">1.66 (유럽식 와이드스크린)</option>
-                <option value="1.77">1.77 (HDTV)</option>
-                <option value="1.85">1.85 (극장용 와이드스크린)</option>
-                <option value="2.35">2.35 (시네마스코프)</option>
-                <option value="2.39">2.39 (아나모픽 와이드스크린)</option>
-                <option value="2.40">2.40 (최신 시네마 규격)</option>
-            </select>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('pixel', this)">📐 픽셀 모드</button>
+        <button class="tab-btn"        onclick="switchTab('phys', this)">📏 물리 모드</button>
+    </div>
 
-            <div class="input-row">
-                <div class="input-field">
-                    <label>가로(Width)</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="ent_w" placeholder="Width" onkeyup="calculate('h')">
-                        <span class="unit">px</span>
+    <!-- ═══ TAB 1: PIXEL ═══ -->
+    <div id="tab-pixel" class="tab-panel active">
+        <div class="workspace">
+            <div class="col-left">
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-dot"></div>
+                        <div class="panel-title">Aspect Ratio / 종횡비</div>
                     </div>
-                    <button class="copy-btn" onclick="copyValue('ent_w')">Copy</button>
-                </div>
-
-                <button id="lockBtn" onclick="toggle()">🔗</button>
-
-                <div class="input-field">
-                    <label>세로(Height)</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="ent_h" placeholder="Height" onkeyup="calculate('w')">
-                        <span class="unit">px</span>
-                    </div>
-                    <button class="copy-btn" onclick="copyValue('ent_h')">Copy</button>
-                </div>
-            </div>
-
-            <p class="footer">수치를 입력하면 즉시 자동 계산됩니다</p>
-
-            <div class="info-panel">
-                <h3>해상도 가이드</h3>
-                <ul>
-                    <li><strong>SD:</strong> 854 x 480 - 과거 낮은 화질</li>
-                    <li><strong>HD:</strong> 1280 x 720 - HD급 화질</li>
-                    <li><strong>FHD:</strong> 1920 x 1080 - 가장 대중적인 규격</li>
-                    <li><strong>QHD:</strong> 2560 x 1440 - FHD 2배 화질</li>
-                    <li><strong>UHD(4K):</strong> 3840 x 2160 - 고화질 표준</li>
-                    <li><strong>8K UHD:</strong> 7680 x 4320 - 초고화질</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════ TAB 2: PHYSICS MODE ═══════════════════════════════ -->
-        <div id="tab-phys" class="tab-panel">
-
-            <!-- STEP 1: 모니터 비율 -->
-            <label class="title">① 모니터 비율</label>
-            <div class="phys-ratio-row">
-                <select id="monitorRatioSelect" onchange="onMonitorRatioChange()">
-                    <option value="16/9" selected>16:9 (현장 표준)</option>
-                    <option value="custom">Custom (직접 입력)</option>
-                </select>
-            </div>
-
-            <!-- STEP 2: 모니터 실측 입력 -->
-            <label class="title">② 모니터 실측 가로 입력 (mm)</label>
-            <div class="input-row">
-                <div class="input-field">
-                    <label>가로(Width)</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="phys_w" placeholder="ex) 160" oninput="onPhysWInput()">
-                        <span class="unit">mm</span>
-                    </div>
-                </div>
-                <div class="input-field" id="phys_h_field">
-                    <label>세로(Height)</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="phys_h" placeholder="자동" oninput="onPhysHInput()" readonly>
-                        <span class="unit">mm</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STEP 3: 목표 종횡비 -->
-            <label class="title">③ 목표 종횡비 선택</label>
-            <div class="phys-ratio-row">
-                <select id="physRatioSelect">
-                    <option value="2.35">2.35 : 1 (시네마스코프)</option>
-                    <option value="2.39">2.39 : 1 (아나모픽 와이드스크린)</option>
-                    <option value="2.40">2.40 : 1 (최신 시네마 규격)</option>
-                    <option value="1.85">1.85 : 1 (극장용 와이드스크린)</option>
-                    <option value="1.7777777777777777">16:9 — 1.78 : 1</option>
-                    <option value="1.66">1.66 : 1 (유럽식 와이드스크린)</option>
-                    <option value="1.3333333333333333">4:3 — 1.33 : 1</option>
-                    <option value="1">1 : 1 (정사각형)</option>
-                    <option value="custom_target">Custom (직접 입력)</option>
-                </select>
-            </div>
-            <!-- Custom 목표 종횡비 직접 입력 -->
-            <div id="customTargetRow" style="display:none; margin-bottom:30px;">
-                <label class="title">목표 비율 직접 입력 (가로 ÷ 세로)</label>
-                <input type="number" id="customRatioVal" placeholder="ex) 2.35" step="0.01"
-                       style="width:90px;" oninput="physUpdateResult()">
-            </div>
-
-            <!-- 결과값 -->
-            <div class="phys-result-panel">
-                <label class="title" style="margin-bottom:14px;">④ 테이프 마킹 결과</label>
-
-                <!-- 가이드 프레임 크기 -->
-                <label class="title">종횡비 적용 프레임 크기</label>
-                <div class="input-row" style="margin-bottom:20px;">
-                    <div class="input-field">
-                        <label>가로</label>
-                        <div class="phys-result-val" id="phys_res_w" onclick="physCopyResult('phys_res_w')">—</div>
-                        <span class="unit">mm</span>
-                    </div>
-                    <span class="phys-x-sep">×</span>
-                    <div class="input-field">
-                        <label>세로</label>
-                        <div class="phys-result-val" id="phys_res_h" onclick="physCopyResult('phys_res_h')">—</div>
-                        <span class="unit">mm</span>
+                    <div class="panel-body">
+                        <div class="field">
+                            <label class="field-label">프리셋</label>
+                            <select id="ratioSelect" onchange="onComboSelect()">
+                                <option value="Custom">Custom (사용자 정의)</option>
+                                <option value="1.7777777777777777" selected>16:9 — 유튜브/일반 영상</option>
+                                <option value="2.1666666666666665">19.5:9 — 스마트폰</option>
+                                <option value="1">1:1 — SNS 정사각형</option>
+                                <option value="1.3333333333333333">4:3 — 고전 TV</option>
+                                <option value="1.85">1.85 — 극장용 와이드</option>
+                                <option value="2.35">2.35 — CinemaScope</option>
+                                <option value="2.39">2.39 — Anamorphic</option>
+                                <option value="2.40">2.40 — Modern Cinema</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Width × Height (px)</label>
+                            <div class="num-pair">
+                                <input type="number" id="ent_w" placeholder="W" onkeyup="calculate('h')">
+                                <button class="lock-btn" id="lockBtn" onclick="toggle()">🔗</button>
+                                <input type="number" id="ent_h" placeholder="H" onkeyup="calculate('w')">
+                            </div>
+                        </div>
+                        <div class="copy-row">
+                            <button class="copy-btn" onclick="copyValue('ent_w', this)">Copy W</button>
+                            <button class="copy-btn" onclick="copyValue('ent_h', this)">Copy H</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 구분선 -->
-                <div style="border-top:1px solid rgba(255,255,255,0.07);margin-bottom:16px;"></div>
-
-                <!-- 여백 수치 -->
-                <label class="title">테이프 위치 — 모니터 가장자리에서 안쪽으로</label>
-                <div class="input-row" style="flex-wrap:wrap; margin-bottom:0;">
-                    <div class="input-field margin-box" id="box_top" style="display:none;">
-                        <label>상단</label>
-                        <div class="margin-val" id="val_top">—</div>
-                        <span class="unit">mm</span>
-                    </div>
-                    <div class="input-field margin-box" id="box_bot" style="display:none;">
-                        <label>하단</label>
-                        <div class="margin-val" id="val_bot">—</div>
-                        <span class="unit">mm</span>
-                    </div>
-                    <div class="input-field margin-box" id="box_left" style="display:none;">
-                        <label>좌측</label>
-                        <div class="margin-val" id="val_left">—</div>
-                        <span class="unit">mm</span>
-                    </div>
-                    <div class="input-field margin-box" id="box_right" style="display:none;">
-                        <label>우측</label>
-                        <div class="margin-val" id="val_right">—</div>
-                        <span class="unit">mm</span>
-                    </div>
-                    <span id="marginPlaceholder">수치 입력 후 표시됩니다</span>
-                </div>
-
-                <p class="phys-copy-hint">결과값 클릭 시 복사됩니다</p>
-            </div>
-
-            <!-- 테이프 시각화 -->
-            <div class="tape-visual">
-                <label class="title">테이프 마킹 시뮬레이션</label>
-                <div class="tape-canvas-wrap">
-                    <div class="tape-empty" id="tapeEmpty">모니터 크기와 종횡비를 입력하면<br>마킹 위치가 표시됩니다</div>
-                    <canvas id="tapeCanvas" style="display:none;"></canvas>
+                <div class="info-panel">
+                    <h3>해상도 가이드</h3>
+                    <ul>
+                        <li><strong>SD</strong> — 854 × 480</li>
+                        <li><strong>HD</strong> — 1280 × 720</li>
+                        <li><strong>FHD</strong> — 1920 × 1080 ★</li>
+                        <li><strong>QHD</strong> — 2560 × 1440</li>
+                        <li><strong>UHD 4K</strong> — 3840 × 2160</li>
+                        <li><strong>8K UHD</strong> — 7680 × 4320</li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="info-panel" style="margin-top:20px;">
-                <h3>📼 물리 모드 사용법</h3>
-                <ul>
-                    <li>① 모니터 비율 — 대부분의 현장 모니터는 <strong>16:9</strong> 고정</li>
-                    <li>② 모니터 가로 실측값(mm)을 입력하면 세로는 자동 계산</li>
-                    <li>③ 목표 종횡비 선택 (예: 2.35:1 시네마스코프)</li>
-                    <li>④ 결과에서 <strong>상단/하단 여백</strong>을 확인 후 해당 위치에 테이프를 붙이세요</li>
-                </ul>
+            <div class="col-right">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-dot dim"></div>
+                        <div class="panel-title">Result / 계산 결과</div>
+                        <div class="live-badge" style="margin-left:auto;"><div class="live-dot"></div>LIVE</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="result-display">
+                            <div class="result-box">
+                                <div class="result-box-label">Width</div>
+                                <div class="result-box-val" id="res_w">1920</div>
+                                <div class="result-box-unit">px</div>
+                            </div>
+                            <div class="result-box">
+                                <div class="result-box-label">Height</div>
+                                <div class="result-box-val" id="res_h">1080</div>
+                                <div class="result-box-unit">px</div>
+                            </div>
+                            <div class="result-box">
+                                <div class="result-box-label">Ratio</div>
+                                <div class="result-box-val" id="res_ratio">1.78</div>
+                                <div class="result-box-unit">: 1</div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div style="margin-bottom:14px;">
+                            <label class="field-label">Frame Shape</label>
+                            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;justify-content:center;align-items:center;min-height:100px;">
+                                <div id="ratioVisualBox" style="background:rgba(0,209,255,0.08);border:1.5px solid rgba(0,209,255,0.3);border-radius:4px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;">
+                                    <span id="ratioVisualLabel" style="font-size:0.65rem;color:var(--cyan);font-family:var(--display);font-weight:700;letter-spacing:1px;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div style="font-size:0.75rem;color:var(--dim);line-height:1.9;" id="pixelNotes">
+                            수치를 입력하면 자동 계산됩니다.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script>
-        /* ══════════════════════════════
-           PIXEL MODE (from script.js)
-        ══════════════════════════════ */
-        let lockStatus = true;
-        let savedRatio = 16 / 9;
+    <!-- ═══ TAB 2: PHYSICS ═══ -->
+    <div id="tab-phys" class="tab-panel">
+        <div class="workspace">
 
-        window.addEventListener('load', function () {
-            document.getElementById('ent_w').value = 1920;
-            document.getElementById('ent_h').value = 1080;
-        });
+            <!-- 좌측: Monitor 설정 + Result 수치 -->
+            <div class="col-left">
+                <!-- MONITOR 설정 -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-dot"></div>
+                        <div class="panel-title">Monitor / 모니터 설정</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="field">
+                            <label class="step-label"><span class="step-badge">①</span>모니터 비율</label>
+                            <select id="monitorRatioSelect" onchange="onMonitorRatioChange()">
+                                <option value="16/9" selected>16:9 (현장 표준)</option>
+                                <option value="custom">Custom (직접 입력)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label class="step-label"><span class="step-badge">②</span>실측 크기 (mm)</label>
+                            <div class="num-pair">
+                                <input type="number" id="phys_w" placeholder="가로 ex) 527" oninput="onPhysWInput()">
+                                <span class="num-sep">×</span>
+                                <input type="number" id="phys_h" placeholder="세로 ex) 297" oninput="onPhysHInput()">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="step-label"><span class="step-badge">③</span>목표 종횡비</label>
+                            <select id="physRatioSelect" onchange="onPhysRatioSelectChange()">
+                                <option value="2.35">2.35 : 1 — CinemaScope</option>
+                                <option value="2.39">2.39 : 1 — Anamorphic</option>
+                                <option value="2.40">2.40 : 1 — Modern Cinema</option>
+                                <option value="1.85">1.85 : 1 — VistaVision</option>
+                                <option value="1.7777777777777777">16:9 — 1.78 : 1</option>
+                                <option value="1.3333333333333333">4:3 — 1.33 : 1</option>
+                                <option value="1">1 : 1 — Square</option>
+                                <option value="custom_target">Custom (직접 입력)</option>
+                            </select>
+                            <div id="customTargetRow" style="display:none;margin-top:8px;">
+                                <input type="number" id="customRatioVal" placeholder="ex) 2.35" step="0.01"
+                                    style="width:100%;text-align:left;padding-left:12px;" oninput="physUpdateResult()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        function calculate(target) {
-            if (!lockStatus) return;
-            const entW = document.getElementById('ent_w');
-            const entH = document.getElementById('ent_h');
-            const combo = document.getElementById('ratioSelect');
-            let ratio = (combo.value === "Custom") ? savedRatio : parseFloat(combo.value);
-            if (target === 'h' && entW.value) {
-                entH.value = Math.round(entW.value / ratio);
-            } else if (target === 'w' && entH.value) {
-                entW.value = Math.round(entH.value * ratio);
-            }
+                <!-- RESULT 수치 -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-dot amber"></div>
+                        <div class="panel-title">Result / 테이프 마킹</div>
+                        <div class="live-badge" style="margin-left:auto;"><div class="live-dot"></div>LIVE</div>
+                    </div>
+                    <div class="panel-body">
+                        <label class="step-label" style="margin-bottom:10px;"><span class="step-badge">④</span>가이드 프레임 크기</label>
+                        <div class="phys-result-panel">
+                            <div class="phys-val-row">
+                                <div class="phys-val-box">
+                                    <div class="phys-val-box-label">Width</div>
+                                    <div class="phys-val" id="phys_res_w" onclick="physCopyResult('phys_res_w')">—</div>
+                                    <div class="phys-val-unit">mm</div>
+                                </div>
+                                <div class="phys-x">×</div>
+                                <div class="phys-val-box">
+                                    <div class="phys-val-box-label">Height</div>
+                                    <div class="phys-val" id="phys_res_h" onclick="physCopyResult('phys_res_h')">—</div>
+                                    <div class="phys-val-unit">mm</div>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <label class="field-label" style="margin-bottom:10px;">테이프 위치 (가장자리에서 안쪽으로)</label>
+                            <div class="margin-grid">
+                                <div class="margin-cell" id="box_top"><div class="margin-cell-label">상단 Top</div><div class="margin-cell-val" id="val_top">—</div><div class="margin-cell-unit">mm</div></div>
+                                <div class="margin-cell" id="box_bot"><div class="margin-cell-label">하단 Bottom</div><div class="margin-cell-val" id="val_bot">—</div><div class="margin-cell-unit">mm</div></div>
+                                <div class="margin-cell" id="box_left"><div class="margin-cell-label">좌측 Left</div><div class="margin-cell-val" id="val_left">—</div><div class="margin-cell-unit">mm</div></div>
+                                <div class="margin-cell" id="box_right"><div class="margin-cell-label">우측 Right</div><div class="margin-cell-val" id="val_right">—</div><div class="margin-cell-unit">mm</div></div>
+                            </div>
+                            <div id="marginPlaceholder" style="font-size:0.78rem;color:var(--dim);text-align:center;padding:10px 0;">수치 입력 후 표시됩니다</div>
+                            <div class="copy-hint">결과값 클릭 시 복사됩니다</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 우측: 시뮬레이션(크게) + 사용법(하단) -->
+            <div class="col-right">
+                <!-- SIMULATION -->
+                <div class="panel" style="flex:1;">
+                    <div class="panel-header">
+                        <div class="panel-dot"></div>
+                        <div class="panel-title">Simulation / 테이프 마킹 시뮬레이션</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tape-canvas-wrap" style="min-height:260px;">
+                            <div class="tape-empty" id="tapeEmpty">모니터 크기와 종횡비를 입력하면<br>마킹 위치가 표시됩니다</div>
+                            <canvas id="tapeCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사용법 -->
+                <div class="info-panel">
+                    <h3>📼 물리 모드 사용법</h3>
+                    <ul>
+                        <li>① 모니터 비율 선택  (대부분 <strong>16:9</strong>)</li>
+                        <li>② 가로 실측값(mm) 입력  →  세로 자동 계산</li>
+                        <li>③ 목표 종횡비 선택</li>
+                        <li>④ 여백 수치 확인 후 테이프를 붙이세요</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- F11 TOAST -->
+<div id="f11Toast">
+    <div class="f11-key">F11</div>
+    <div class="f11-msg">전체화면으로 전환하면 더 정확합니다</div>
+</div>
+
+<!-- FRAME OVERLAY -->
+<div id="frameOverlay">
+    <div id="overlayBg"></div>
+    <canvas id="overlayCanvas"></canvas>
+    <div class="ov-hud">
+        <select class="ov-select" id="ovRatioSelect" onchange="ovUpdateRatio()">
+            <option value="1.7777">16:9 — Standard</option>
+            <option value="1.85">1.85 — VistaVision</option>
+            <option value="2.35" selected>2.35 — CinemaScope</option>
+            <option value="2.39">2.39 — Anamorphic</option>
+            <option value="2.40">2.40 — Modern Cinema</option>
+            <option value="1.333">4:3 — Classic</option>
+            <option value="1">1:1 — Square</option>
+        </select>
+        <div class="ov-color-chip ov-chip-black selected" id="ovChipBlack" onclick="ovSetColor('black')">BLK</div>
+        <div class="ov-color-chip ov-chip-green" id="ovChipGreen" onclick="ovSetColor('green')">GRN</div>
+        <div class="ov-center-chip selected" id="ovCenterDark"  onclick="ovSetCenter('dark')">■ 어둡게</div>
+        <div class="ov-center-chip"          id="ovCenterLight" onclick="ovSetCenter('light')">□ 밝게</div>
+        <div class="ov-ratio-label" id="ovRatioLabel">2.35</div>
+        <button class="ov-close-btn" onclick="closeFrameOverlay()">✕ Close [Esc]</button>
+    </div>
+</div>
+
+<script>
+/* ═══ PIXEL MODE ═══ */
+let lockStatus = true;
+let savedRatio = 16 / 9;
+
+window.addEventListener('load', function () {
+    document.getElementById('ent_w').value = 1920;
+    document.getElementById('ent_h').value = 1080;
+    updatePixelResult();
+});
+
+function calculate(target) {
+    if (!lockStatus) return;
+    const entW  = document.getElementById('ent_w');
+    const entH  = document.getElementById('ent_h');
+    const combo = document.getElementById('ratioSelect');
+    let ratio   = (combo.value === 'Custom') ? savedRatio : parseFloat(combo.value);
+    if (target === 'h' && entW.value) entH.value = Math.round(entW.value / ratio);
+    else if (target === 'w' && entH.value) entW.value = Math.round(entH.value * ratio);
+    updatePixelResult();
+}
+
+function toggle() {
+    lockStatus = !lockStatus;
+    const btn  = document.getElementById('lockBtn');
+    const entW = document.getElementById('ent_w');
+    const entH = document.getElementById('ent_h');
+    if (lockStatus) {
+        btn.textContent = '🔗'; btn.style.borderColor = '';
+        if (entW.value && entH.value) savedRatio = entW.value / entH.value;
+    } else {
+        btn.textContent = '🔓'; btn.style.borderColor = 'var(--red)';
+        document.getElementById('ratioSelect').value = 'Custom';
+    }
+    updatePixelResult();
+}
+
+function onComboSelect() {
+    const combo = document.getElementById('ratioSelect');
+    if (combo.value !== 'Custom') {
+        if (!lockStatus) toggle();
+        calculate('h');
+    }
+}
+
+function copyValue(id, btn) {
+    const val = document.getElementById(id).value;
+    if (!val) return;
+    navigator.clipboard.writeText(val).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓'; btn.style.color = 'var(--cyan)'; btn.style.borderColor = 'var(--cyan)';
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 1200);
+    });
+}
+
+function updatePixelResult() {
+    const w = parseInt(document.getElementById('ent_w').value) || 0;
+    const h = parseInt(document.getElementById('ent_h').value) || 0;
+    document.getElementById('res_w').textContent = w || '—';
+    document.getElementById('res_h').textContent = h || '—';
+    const ratio = h ? (w / h).toFixed(2) : '—';
+    document.getElementById('res_ratio').textContent = ratio;
+    const box = document.getElementById('ratioVisualBox');
+    const lbl = document.getElementById('ratioVisualLabel');
+    if (w && h) {
+        const r = w / h;
+        const maxW = 150, maxH = 90;
+        let bw, bh;
+        if (r >= 1) { bw = maxW; bh = Math.round(maxW / r); } else { bh = maxH; bw = Math.round(maxH * r); }
+        bh = Math.max(bh, 22);
+        box.style.width = bw + 'px'; box.style.height = bh + 'px';
+        lbl.textContent = ratio + ':1';
+        const mp = ((w * h) / 1_000_000).toFixed(1);
+        document.getElementById('pixelNotes').innerHTML =
+            `<span style="color:var(--text)">${w.toLocaleString()} × ${h.toLocaleString()} px</span>&nbsp;/&nbsp;${ratio}:1&nbsp;/&nbsp;<span style="color:var(--cyan)">${mp} MP</span>`;
+    }
+}
+
+/* ═══ TAB ═══ */
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+}
+
+/* ═══ PHYSICS MODE ═══ */
+function onMonitorRatioChange() {
+    const sel = document.getElementById('monitorRatioSelect');
+    const hInput = document.getElementById('phys_h');
+    const wInput = document.getElementById('phys_w');
+    if (sel.value === 'custom') {
+        hInput.placeholder = '세로 ex) 297'; hInput.value = '';
+    } else {
+        hInput.placeholder = '세로 ex) 297';
+        if (wInput.value) hInput.value = Math.round(wInput.value / (16/9) * 10) / 10;
+    }
+    physUpdateResult();
+}
+
+function onPhysWInput() {
+    const sel = document.getElementById('monitorRatioSelect');
+    const w = document.getElementById('phys_w');
+    const h = document.getElementById('phys_h');
+    if (sel.value === '16/9' && w.value) h.value = Math.round(w.value / (16/9) * 10) / 10;
+    physUpdateResult();
+}
+
+function onPhysHInput() {
+    const sel = document.getElementById('monitorRatioSelect');
+    const w = document.getElementById('phys_w');
+    const h = document.getElementById('phys_h');
+    if (sel.value === '16/9' && h.value) w.value = Math.round(h.value * (16/9) * 10) / 10;
+    physUpdateResult();
+}
+
+function onPhysRatioSelectChange() {
+    const sel = document.getElementById('physRatioSelect');
+    document.getElementById('customTargetRow').style.display = sel.value === 'custom_target' ? 'block' : 'none';
+    physUpdateResult();
+}
+
+function getTargetRatio() {
+    const sel = document.getElementById('physRatioSelect');
+    if (sel.value === 'custom_target') {
+        const v = parseFloat(document.getElementById('customRatioVal').value);
+        return isNaN(v) ? null : v;
+    }
+    return parseFloat(sel.value);
+}
+
+function physUpdateResult() {
+    const monW = parseFloat(document.getElementById('phys_w').value);
+    const monH = parseFloat(document.getElementById('phys_h').value);
+    const resW = document.getElementById('phys_res_w');
+    const resH = document.getElementById('phys_res_h');
+    if (!monW || !monH) { resW.textContent = '—'; resH.textContent = '—'; hideTapeCanvas(); return; }
+    const targetRatio = getTargetRatio();
+    if (!targetRatio)  { resW.textContent = '—'; resH.textContent = '—'; hideTapeCanvas(); return; }
+
+    const monRatio = monW / monH;
+    let guideW, guideH;
+    if (targetRatio <= monRatio) { guideH = monH; guideW = Math.round(monH * targetRatio * 100) / 100; }
+    else { guideW = monW; guideH = Math.round(monW / targetRatio * 100) / 100; }
+    resW.textContent = guideW; resH.textContent = guideH;
+
+    const marginTB = Math.round((monH - guideH) / 2 * 100) / 100;
+    const marginLR = Math.round((monW - guideW) / 2 * 100) / 100;
+    document.getElementById('marginPlaceholder').style.display = 'none';
+
+    const showCell = (id, valId, val) => {
+        const cell = document.getElementById(id);
+        if (val > 0) { cell.classList.add('visible'); document.getElementById(valId).textContent = val; }
+        else cell.classList.remove('visible');
+    };
+    showCell('box_top','val_top',marginTB); showCell('box_bot','val_bot',marginTB);
+    showCell('box_left','val_left',marginLR); showCell('box_right','val_right',marginLR);
+    drawTapeCanvas(monW, monH, guideW, guideH);
+}
+
+function hideTapeCanvas() {
+    document.getElementById('tapeCanvas').style.display = 'none';
+    document.getElementById('tapeEmpty').style.display  = 'flex';
+    ['box_top','box_bot','box_left','box_right'].forEach(id => document.getElementById(id).classList.remove('visible'));
+    document.getElementById('marginPlaceholder').style.display = 'block';
+}
+
+function drawTapeCanvas(monW, monH, guideW, guideH) {
+    const canvas = document.getElementById('tapeCanvas');
+    const empty  = document.getElementById('tapeEmpty');
+    const maxW   = Math.min(400, canvas.parentElement.clientWidth - 10);
+    const scale  = maxW / monW;
+    canvas.width = monW * scale; canvas.height = monH * scale;
+    canvas.style.display = 'block'; empty.style.display = 'none';
+
+    const ctx = canvas.getContext('2d');
+    const cW = canvas.width, cH = canvas.height;
+    const gW = guideW * scale, gH = guideH * scale;
+    const ox = (cW - gW) / 2, oy = (cH - gH) / 2;
+
+    ctx.clearRect(0,0,cW,cH);
+    ctx.fillStyle = '#161616';
+    ctx.beginPath(); roundRect(ctx,0,0,cW,cH,8); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 0.5;
+    for (let x=0;x<cW;x+=18){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cH);ctx.stroke();}
+    for (let y=0;y<cH;y+=18){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cW,y);ctx.stroke();}
+
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    if (oy > 0) { ctx.fillRect(0,0,cW,oy); ctx.fillRect(0,oy+gH,cW,oy); }
+    if (ox > 0) { ctx.fillRect(0,oy,ox,gH); ctx.fillRect(ox+gW,oy,ox,gH); }
+    ctx.fillStyle = 'rgba(0,209,255,0.05)'; ctx.fillRect(ox,oy,gW,gH);
+    ctx.strokeStyle = '#00d1ff'; ctx.lineWidth = 1.8;
+    ctx.setLineDash([6,3]); ctx.strokeRect(ox,oy,gW,gH); ctx.setLineDash([]);
+
+    const cl = 10; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    [[ox,oy,1,1],[ox+gW,oy,-1,1],[ox,oy+gH,1,-1],[ox+gW,oy+gH,-1,-1]].forEach(([cx,cy,dx,dy]) => {
+        ctx.beginPath(); ctx.moveTo(cx+dx*cl,cy); ctx.lineTo(cx,cy); ctx.lineTo(cx,cy+dy*cl); ctx.stroke();
+    });
+    ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(ox+gW/2-42,oy+gH/2-11,84,22);
+    ctx.fillStyle = '#00d1ff'; ctx.font = 'bold 10px DM Mono, monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(guideW+' × '+guideH+' mm', ox+gW/2, oy+gH/2);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+function physCopyResult(id) {
+    const el = document.getElementById(id); const val = el.textContent;
+    if (val === '—') return;
+    navigator.clipboard.writeText(val+'mm').then(() => {
+        el.classList.remove('copied'); void el.offsetWidth; el.classList.add('copied');
+    });
+}
+
+/* ═══ FRAME OVERLAY ═══ */
+let ovColor = 'black', ovCenter = 'dark', ovAnimId = null;
+
+function openFrameOverlay() {
+    // 항상 2.35로 시작
+    document.getElementById('ovRatioSelect').value = '2.35';
+    document.getElementById('ovRatioLabel').textContent = '2.35';
+    document.getElementById('frameOverlay').classList.add('active');
+    showF11Toast();
+    ovDrawLoop();
+    document.addEventListener('keydown', ovKeyHandler);
+}
+
+function showF11Toast() {
+    const t = document.getElementById('f11Toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function ovKeyHandler(e) {
+    if (e.key === 'Escape') closeFrameOverlay();
+}
+
+function closeFrameOverlay() {
+    if (ovAnimId) { cancelAnimationFrame(ovAnimId); ovAnimId = null; }
+    document.getElementById('frameOverlay').classList.remove('active');
+    document.removeEventListener('keydown', ovKeyHandler);
+}
+
+function ovSetColor(color) {
+    ovColor = color;
+    document.getElementById('ovChipBlack').classList.toggle('selected', color === 'black');
+    document.getElementById('ovChipGreen').classList.toggle('selected', color === 'green');
+}
+
+function ovSetCenter(mode) {
+    ovCenter = mode;
+    document.getElementById('ovCenterDark').classList.toggle('selected',  mode === 'dark');
+    document.getElementById('ovCenterLight').classList.toggle('selected', mode === 'light');
+}
+
+function ovUpdateRatio() {
+    const sel = document.getElementById('ovRatioSelect');
+    const label = sel.options[sel.selectedIndex].text.split('—')[0].trim();
+    document.getElementById('ovRatioLabel').textContent = label;
+}
+
+function ovDrawLoop() {
+    if (ovAnimId) cancelAnimationFrame(ovAnimId);
+    const canvas = document.getElementById('overlayCanvas');
+    const ctx = canvas.getContext('2d');
+    const draw = () => {
+        const dW = window.innerWidth, dH = window.innerHeight;
+        canvas.width = dW; canvas.height = dH;
+        ctx.clearRect(0, 0, dW, dH);
+        const ratio = parseFloat(document.getElementById('ovRatioSelect').value) || 2.35;
+
+        // 바 색상
+        const fill = ovColor === 'green' ? 'rgba(0,100,30,0.88)' : 'rgba(0,0,0,0.88)';
+        ctx.fillStyle = fill;
+
+        let bx = 0, by = 0, bw = dW, bh = dH; // 중앙 영역 좌표
+        const targetH = dW / ratio;
+        if (targetH <= dH) {
+            const barH = (dH - targetH) / 2;
+            ctx.fillRect(0, 0, dW, barH);
+            ctx.fillRect(0, dH - barH, dW, barH + 1);
+            by = barH; bh = targetH;
+            ovDrawCorners(ctx, 0, barH, dW, targetH);
+        } else {
+            const targetW = dH * ratio;
+            const barW = (dW - targetW) / 2;
+            ctx.fillRect(0, 0, barW + 1, dH);
+            ctx.fillRect(dW - barW, 0, barW + 1, dH);
+            bx = barW; bw = targetW;
+            ovDrawCorners(ctx, barW, 0, targetW, dH);
         }
 
-        function toggle() {
-            lockStatus = !lockStatus;
-            const btn   = document.getElementById('lockBtn');
-            const entW  = document.getElementById('ent_w');
-            const entH  = document.getElementById('ent_h');
-            if (lockStatus) {
-                btn.innerText = "🔗";
-                btn.style.color = "white";
-                if (entW.value && entH.value) savedRatio = entW.value / entH.value;
-            } else {
-                btn.innerText = "🔓";
-                btn.style.color = "#ff4757";
-                document.getElementById('ratioSelect').value = "Custom";
-            }
+        // 중앙 영역 밝기
+        if (ovCenter === 'light') {
+            ctx.fillStyle = 'rgba(255,255,255,0.18)';
+            ctx.fillRect(bx, by, bw, bh);
         }
 
-        function onComboSelect() {
-            const combo = document.getElementById('ratioSelect');
-            if (combo.value !== "Custom") {
-                if (!lockStatus) toggle();
-                calculate('h');
-            }
-        }
+        // ratio label 업데이트
+        const sel = document.getElementById('ovRatioSelect');
+        document.getElementById('ovRatioLabel').textContent =
+            sel.options[sel.selectedIndex].text.split('—')[0].trim();
+        ovAnimId = requestAnimationFrame(draw);
+    };
+    draw();
+}
 
-        function copyValue(id) {
-            const val = document.getElementById(id).value;
-            if (!val) return;
-            navigator.clipboard.writeText(val).then(() => {
-                alert("값이 복사되었습니다: " + val + "px");
-            });
-        }
-        /* ══════════════════════════════
-           TAB SWITCHER
-        ══════════════════════════════ */
-        function switchTab(name) {
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + name).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+function ovDrawCorners(ctx, x, y, w, h) {
+    const len = Math.min(w, h) * 0.055;
+    ctx.strokeStyle = ovColor === 'green' ? 'rgba(255,255,255,0.85)' : 'rgba(0,209,255,0.9)';
+    ctx.lineWidth = 2.5;
+    [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]].forEach(([cx,cy,dx,dy]) => {
+        ctx.beginPath(); ctx.moveTo(cx+dx*len, cy); ctx.lineTo(cx, cy); ctx.lineTo(cx, cy+dy*len); ctx.stroke();
+    });
+}
 
-        /* ══════════════════════════════
-           PHYSICS MODE
-        ══════════════════════════════ */
-
-        // ── 모니터 비율 변경 ──
-        function onMonitorRatioChange() {
-            const sel = document.getElementById('monitorRatioSelect');
-            const hInput = document.getElementById('phys_h');
-            const wInput = document.getElementById('phys_w');
-
-            if (sel.value === 'custom') {
-                // Custom: 세로 직접 입력 가능
-                hInput.removeAttribute('readonly');
-                hInput.placeholder = 'ex) 90';
-                hInput.value = '';
-                // 세로 필드 항상 표시 (이미 표시 중)
-            } else {
-                // 16:9 고정: 세로 자동 계산
-                hInput.setAttribute('readonly', true);
-                hInput.placeholder = '자동';
-                if (wInput.value) {
-                    hInput.value = Math.round(wInput.value / (16/9) * 10) / 10;
-                }
-            }
-            physUpdateResult();
-        }
-
-        // ── 가로 입력 시 ──
-        function onPhysWInput() {
-            const sel = document.getElementById('monitorRatioSelect');
-            const wInput = document.getElementById('phys_w');
-            const hInput = document.getElementById('phys_h');
-
-            if (sel.value === '16/9') {
-                // 16:9 고정이면 세로 자동 계산
-                hInput.value = wInput.value
-                    ? Math.round(wInput.value / (16/9) * 10) / 10
-                    : '';
-            }
-            physUpdateResult();
-        }
-
-        // ── 세로 입력 시 (Custom 전용) ──
-        function onPhysHInput() {
-            physUpdateResult();
-        }
-
-        // ── 목표 종횡비 드롭다운 ──
-        function onPhysRatioSelectChange() {
-            const sel = document.getElementById('physRatioSelect');
-            const customRow = document.getElementById('customTargetRow');
-            customRow.style.display = sel.value === 'custom_target' ? 'block' : 'none';
-            physUpdateResult();
-        }
-
-        // ── 목표 종횡비 값 가져오기 ──
-        function getTargetRatio() {
-            const sel = document.getElementById('physRatioSelect');
-            if (sel.value === 'custom_target') {
-                const v = parseFloat(document.getElementById('customRatioVal').value);
-                return isNaN(v) ? null : v;
-            }
-            return parseFloat(sel.value);
-        }
-
-        /* ── 결과 계산 ── */
-        function physUpdateResult() {
-            const monW = parseFloat(document.getElementById('phys_w').value);
-            const monH = parseFloat(document.getElementById('phys_h').value);
-            const resW = document.getElementById('phys_res_w');
-            const resH = document.getElementById('phys_res_h');
-
-            if (!monW || !monH) {
-                resW.textContent = '—';
-                resH.textContent = '—';
-                hideTapeCanvas();
-                return;
-            }
-
-            const targetRatio = getTargetRatio();
-            if (!targetRatio) {
-                resW.textContent = '—';
-                resH.textContent = '—';
-                hideTapeCanvas();
-                return;
-            }
-
-            const monRatio = monW / monH;
-
-            let guideW, guideH;
-            if (targetRatio <= monRatio) {
-                // 세로 기준 (레터박스 → 상하 여백)
-                guideH = monH;
-                guideW = Math.round(monH * targetRatio * 100) / 100;
-            } else {
-                // 가로 기준 (필러박스 → 좌우 여백)
-                guideW = monW;
-                guideH = Math.round(monW / targetRatio * 100) / 100;
-            }
-
-            resW.textContent = guideW;
-            resH.textContent = guideH;
-
-            // 여백 = (모니터 치수 - 가이드 치수) / 2
-            const marginTB = Math.round((monH - guideH) / 2 * 100) / 100;
-            const marginLR = Math.round((monW - guideW) / 2 * 100) / 100;
-
-            const placeholder = document.getElementById('marginPlaceholder');
-            placeholder.style.display = 'none';
-
-            const showBox = (id, valId, val) => {
-                const box = document.getElementById(id);
-                box.style.display = val > 0 ? 'flex' : 'none';
-                document.getElementById(valId).textContent = val > 0 ? val : '—';
-            };
-            showBox('box_top',   'val_top',   marginTB);
-            showBox('box_bot',   'val_bot',   marginTB);
-            showBox('box_left',  'val_left',  marginLR);
-            showBox('box_right', 'val_right', marginLR);
-
-            drawTapeCanvas(monW, monH, guideW, guideH);
-        }
-
-        // select onchange 연결
-        document.getElementById('physRatioSelect').addEventListener('change', onPhysRatioSelectChange);
-
-        /* ── Canvas 시각화 ── */
-        function drawTapeCanvas(monW, monH, guideW, guideH) {
-            const canvas = document.getElementById('tapeCanvas');
-            const empty  = document.getElementById('tapeEmpty');
-            const maxW   = Math.min(380, canvas.parentElement.clientWidth - 10);
-            const scale  = maxW / monW;
-            canvas.width  = monW * scale;
-            canvas.height = monH * scale;
-            canvas.style.display = 'block';
-            empty.style.display  = 'none';
-
-            const ctx = canvas.getContext('2d');
-            const cW = canvas.width, cH = canvas.height;
-            const gW = guideW * scale, gH = guideH * scale;
-            const ox = (cW - gW) / 2, oy = (cH - gH) / 2;
-
-            /* 모니터 배경 */
-            ctx.clearRect(0, 0, cW, cH);
-            ctx.fillStyle = '#1a1a1a';
-            ctx.beginPath(); roundRect(ctx, 0, 0, cW, cH, 8); ctx.fill();
-
-            /* 모니터 그리드 (미세한 격자) */
-            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-            ctx.lineWidth = 0.5;
-            const step = 20;
-            for (let x = 0; x < cW; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, cH); ctx.stroke(); }
-            for (let y = 0; y < cH; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cW, y); ctx.stroke(); }
-
-            /* 마스크 영역 (잘리는 부분) */
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
-            if (oy > 0) {
-                ctx.fillRect(0,  0,    cW, oy);
-                ctx.fillRect(0,  oy+gH, cW, oy);
-            }
-            if (ox > 0) {
-                ctx.fillRect(0,   oy, ox, gH);
-                ctx.fillRect(ox+gW, oy, ox, gH);
-            }
-
-            /* 가이드 프레임 영역 */
-            ctx.fillStyle = 'rgba(0, 209, 255, 0.06)';
-            ctx.fillRect(ox, oy, gW, gH);
-
-            /* 테이프 선 */
-            const tapeColor = '#00d1ff';
-            const tapeDash  = [6, 3];
-            ctx.strokeStyle = tapeColor;
-            ctx.lineWidth   = 2;
-            ctx.setLineDash(tapeDash);
-            ctx.strokeRect(ox, oy, gW, gH);
-            ctx.setLineDash([]);
-
-            /* 모서리 강조 */
-            const cornerLen = 12;
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth   = 2;
-            [[ox, oy],[ox+gW, oy],[ox, oy+gH],[ox+gW, oy+gH]].forEach(([cx, cy], i) => {
-                const dx = (i % 2 === 0) ? 1 : -1;
-                const dy = (i < 2)       ? 1 : -1;
-                ctx.beginPath();
-                ctx.moveTo(cx + dx * cornerLen, cy);
-                ctx.lineTo(cx, cy);
-                ctx.lineTo(cx, cy + dy * cornerLen);
-                ctx.stroke();
-            });
-
-            /* 치수 표시 */
-            ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.fillRect(ox + gW/2 - 36, oy + gH/2 - 11, 72, 22);
-            ctx.fillStyle = '#00d1ff';
-            ctx.font = 'bold 11px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(guideW + ' × ' + guideH + ' mm', ox + gW/2, oy + gH/2);
-        }
-
-        function hideTapeCanvas() {
-            document.getElementById('tapeCanvas').style.display = 'none';
-            document.getElementById('tapeEmpty').style.display  = 'flex';
-            ['box_top','box_bot','box_left','box_right'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
-            });
-            document.getElementById('marginPlaceholder').style.display = 'inline';
-        }
-
-        function roundRect(ctx, x, y, w, h, r) {
-            ctx.moveTo(x+r, y);
-            ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-            ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-            ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-            ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
-            ctx.closePath();
-        }
-
-        /* 결과값 복사 */
-        function physCopyResult(id) {
-            const el = document.getElementById(id);
-            const val = el.textContent;
-            if (val === '—') return;
-            navigator.clipboard.writeText(val + 'mm').then(() => {
-                el.classList.remove('copied');
-                void el.offsetWidth;
-                el.classList.add('copied');
-            });
-        }
-    </script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js');
+}
+</script>
 </body>
 </html>
