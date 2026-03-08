@@ -8,6 +8,99 @@ A lightweight, offline-ready tool for video production — calculate frame dimen
 
 ## Changelog / 업데이트 내역
 
+# VIZO : Frame Guide — Changelog
+
+---
+
+## v1.3.1 — 2026.03
+
+### 🇺🇸 English
+
+**Web App (`index.html`)**
+- Replaced Camera Overlay with Frame Overlay — no camera permission required
+- Frame Overlay now launches with `2.35:1 (CinemaScope)` as the default ratio
+- Added center brightness toggle in overlay HUD: **Dark** / **Light** mode
+- DESKTOP OVERLAY button relocated to the header — accessible from both Pixel and Physics tabs
+- DESKTOP OVERLAY button styled in amber to match the Python desktop edition
+- Physics tab layout restructured to match the Python app: Monitor settings + Result on the left, Simulation canvas (full height) + Usage guide on the right
+- Physics mode: removed `readonly` from height input field — both width and height are now freely editable
+- Physics mode: height input now auto-calculates width (16:9 ratio), and vice versa
+- Physics mode: input placeholder updated to `세로 ex) 297`
+- F11 fullscreen toast notification added when overlay opens
+
+**Python Desktop (`vizo_frame_guide.py`)**
+- Overlay transparency fixed: using `-transparentcolor #010101` chroma key on Windows — center area is now fully transparent, letterbox bars are fully opaque
+- Opacity slider range expanded to `0–100%`; bar brightness responds to slider value
+- Overlay always launches with `2.35:1 (CinemaScope)` as the default ratio
+- ESC key binding extended to `hud_win` and `hud` frame for reliable close behavior
+- Physics tab: height input field made editable — `readonly` removed
+- Physics tab: height → width auto-calculation added (`_on_phys_h`)
+- Physics tab: input placeholder changed to `세로 ex) 297`
+- Scrollable frame removed; layout is now fixed (non-resizable window at `1100×820`)
+- Physics tab layout restructured: left column (Monitor + Result), right column (Simulation + Usage guide)
+
+---
+
+### 🇰🇷 한국어
+
+**웹앱 (`index.html`)**
+- 카메라 오버레이 제거 → Frame Overlay로 교체 (카메라 권한 불필요)
+- Frame Overlay 실행 시 기본 종횡비 `2.35:1 (CinemaScope)`로 고정
+- 오버레이 HUD에 중앙 밝기 선택 추가: **■ 어둡게** / **□ 밝게**
+- DESKTOP OVERLAY 버튼을 헤더로 이동 — 픽셀/물리 탭 어디서든 접근 가능
+- DESKTOP OVERLAY 버튼 색상을 파이썬 버전과 동일한 amber(주황)로 변경
+- 물리 탭 레이아웃을 파이썬 앱과 동일하게 재구성: 좌측(모니터 설정 + 결과 수치), 우측(시뮬레이션 캔버스 + 사용법)
+- 물리 모드 세로 입력칸 `readonly` 제거 — 가로/세로 모두 자유 입력 가능
+- 물리 모드 세로 입력 시 가로 자동 계산(16:9 기준), 반대도 동일하게 작동
+- 물리 모드 입력 placeholder `세로 ex) 297`로 변경
+- 오버레이 열릴 때 F11 전체화면 안내 토스트 표시
+
+**파이썬 데스크톱 (`vizo_frame_guide.py`)**
+- 오버레이 투명도 수정: Windows에서 `-transparentcolor #010101` 크로마키 방식 적용 — 중앙 영역 완전 투명, 레터박스 바 완전 불투명
+- Opacity 슬라이더 범위 `0–100%`로 확장, 슬라이더 값에 따라 바 밝기 반응
+- 오버레이 실행 시 기본 종횡비 `2.35:1 (CinemaScope)`로 고정
+- ESC 키 바인딩을 `hud_win` 및 `hud` 프레임까지 확장 — 안정적인 닫기 동작 보장
+- 물리 탭 세로 입력칸 `readonly` 제거 — 자유 입력 가능
+- 물리 탭 세로 입력 → 가로 자동 계산 기능 추가 (`_on_phys_h`)
+- 물리 탭 입력 placeholder `세로 ex) 297`로 변경
+- 스크롤 프레임 제거, 창 고정 크기(`1100×820`) 비조절 방식으로 변경
+- 물리 탭 레이아웃 재구성: 좌측(모니터 설정 + 결과), 우측(시뮬레이션 + 사용법)
+
+---
+
+## v1.3.1 — Initial Python Desktop Release
+
+### 🇺🇸 English
+- Initial release of Python desktop edition (`vizo_frame_guide.py`)
+- Two-column layout matching the web app, window size `1060×720`
+- Desktop Overlay with fullscreen letterbox rendering
+- Overlay HUD moved to top bar
+- Semi-transparent overlay support with opacity toggle
+- Pixel mode and Physics (tape marking) mode
+
+### 🇰🇷 한국어
+- 파이썬 데스크톱 버전 최초 출시 (`vizo_frame_guide.py`)
+- 웹앱과 동일한 2컬럼 레이아웃, 창 크기 `1060×720`
+- 전체화면 레터박스 렌더링 데스크톱 오버레이
+- 오버레이 HUD 상단으로 이동
+- Opacity 토글을 통한 반투명 오버레이 지원
+- 픽셀 모드 및 물리(테이프 마킹) 모드
+
+---
+
+## v1.2.1 — Web App
+
+### 🇺🇸 English
+- Web PWA version (`index.html`) with Pixel mode and Physics mode
+- Camera overlay for on-set framing reference
+- Tape marking simulation canvas
+
+### 🇰🇷 한국어
+- 웹 PWA 버전 (`index.html`) — 픽셀 모드 및 물리 모드
+- 현장 프레이밍 참고용 카메라 오버레이
+- 테이프 마킹 시뮬레이션 캔버스
+
+
 ### v1.2.0
 **English**
 
